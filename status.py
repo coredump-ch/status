@@ -1,11 +1,11 @@
-#!/usr/bin/env python3.3
-# coding=utf8
-
-import cgi
-import cgitb
+# -*- coding: utf-8 -*-
 import json
 
-cgitb.enable()  # uncomment for debugging
+from bottle import default_app, route, response, run
+
+
+app = default_app()
+
 
 data = {
     'api': '0.13',
@@ -23,7 +23,7 @@ data = {
         'spacephone': False
     },
     'state': {
-        'open': False,
+        'open': None,
         'message': 'Open every monday from 18:00',
     },
     'contact': {
@@ -45,8 +45,14 @@ data = {
     'projects': ['https://github.com/coredump-ch/'],
 }
 
-print('Access-Control-Allow-Origin: *')
-print('Cache-Control: no-cache')
-print('Content-Type: application/json')
-print()
-print(json.dumps(data))
+
+@route('/')
+def json_out():
+    response.set_header('Access-Control-Allow-Origin', '*')
+    response.set_header('Cache-Control', 'no-cache')
+    response.set_header('Content-Type', 'application/json')
+    return json.dumps(data)
+
+
+if __name__ == '__main__':
+    run(host='localhost', port=8080)
