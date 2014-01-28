@@ -25,3 +25,8 @@ single threaded dev server, for example Gunicorn::
     gunicorn -b 127.0.0.1:9002 -w 4 status:app
 
 This will start a multithreaded server with 4 workers on port 9002.
+
+License
+-------
+
+MIT, see ``LICENSE.txt``.
