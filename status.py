@@ -24,7 +24,7 @@ data = {
     },
     'state': {
         'open': None,
-        'message': 'Open every monday from 18:00',
+        'message': 'Open every monday from 19:00',
     },
     'contact': {
         'irc': 'irc://freenode.net/#coredump',
