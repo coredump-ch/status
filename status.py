@@ -10,8 +10,8 @@ app = default_app()
 data = {
     'api': '0.13',
     'space': 'coredump',
-    'logo': 'http://www.coredump.ch/logo.png',
-    'url': 'http://www.coredump.ch/',
+    'logo': 'https://www.coredump.ch/logo.png',
+    'url': 'https://www.coredump.ch/',
     'location': {
         'address': 'Spinnereistrasse 2, 8640 Rapperswil, Switzerland',
         'lat': 47.22936,
@@ -36,7 +36,7 @@ data = {
     'feeds': {
         'blog': {
             'type': 'rss',
-            'url': 'http://www.coredump.ch/feed/',
+            'url': 'https://www.coredump.ch/feed/',
         },
     },
     'cache': {
