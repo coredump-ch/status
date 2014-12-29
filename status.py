@@ -42,7 +42,10 @@ data = {
     'cache': {
         'schedule': 'h.02',
     },
-    'projects': ['https://github.com/coredump-ch/'],
+    'projects': [
+        'https://github.com/coredump-ch/',
+        'https://www.coredump.ch/projekte/',
+    ],
 }
 
 
