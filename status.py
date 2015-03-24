@@ -7,6 +7,19 @@ from bottle import default_app, route, response, run, request
 app = default_app()
 
 
+def get_number_of_people():
+    """
+    Return an integer or None.
+    """
+    people = None
+    try:
+        with open('people.txt', 'r') as f:
+            people = int(f.read().strip())
+    except:
+        pass
+    return people
+
+
 @route('/')
 def json_out():
     response.set_header('Access-Control-Allow-Origin', '*')
@@ -60,12 +73,7 @@ def json_out():
         },
     }
 
-    people = None
-    try:
-        with open('people.txt', 'r') as f:
-            people = int(f.read().strip())
-    except:
-        pass
+    people = get_number_of_people()
     if people and people > 0:
         data['state']['open'] = True
         data['sensors']['people_now_present']['value'] = people
@@ -85,6 +93,22 @@ def update():
     with open('people.txt', 'w') as f:
         f.write(str(people))
     return 'OK'
+
+
+@route('/sensors/people_now_present/html')
+def sensor_people_html():
+    """
+    Show a HTML version of the opening status.
+    """
+    people = get_number_of_people()
+    html = []
+    if people and people > 0:
+        html.append('<p class="spaceapi opening_status">Open</p>')
+        msg = '1 person' if people == 1 else '%s people' % people
+        html.append('<p class="spaceapi people">%s present</p>' % msg)
+    else:
+        html.append('<p class="spaceapi opening_status">Closed</p>')
+    return '\n'.join(html)
 
 
 if __name__ == '__main__':
