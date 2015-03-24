@@ -49,8 +49,9 @@ def json_out():
             'schedule': 'h.02',
         },
         'projects': [
-            'https://github.com/coredump-ch/',
             'https://www.coredump.ch/projekte/',
+            'https://discourse.coredump.ch/c/projects',
+            'https://github.com/coredump-ch/',
         ],
     }
 
