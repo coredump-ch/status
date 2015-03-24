@@ -53,6 +53,11 @@ def json_out():
             'https://discourse.coredump.ch/c/projects',
             'https://github.com/coredump-ch/',
         ],
+        'sensors': {
+            'people_now_present': {
+                'value': 0,
+            },
+        },
     }
 
     people = None
@@ -63,6 +68,7 @@ def json_out():
         pass
     if people and people > 0:
         data['state']['open'] = True
+        data['sensors']['people_now_present']['value'] = people
         base_msg = '1 person' if people == 1 else '%s people' % people
         data['state']['message'] = base_msg + ' present right now'
 
