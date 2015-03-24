@@ -54,9 +54,9 @@ def json_out():
             'https://github.com/coredump-ch/',
         ],
         'sensors': {
-            'people_now_present': {
-                'value': 0,
-            },
+            'people_now_present': [
+                {'value': 0},
+            ],
         },
     }
 
