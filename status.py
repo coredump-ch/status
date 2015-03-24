@@ -46,7 +46,7 @@ def json_out():
             },
         },
         'cache': {
-            'schedule': 'h.02',
+            'schedule': 'm.02',
         },
         'projects': [
             'https://www.coredump.ch/projekte/',
