@@ -76,7 +76,7 @@ def json_out():
     people = get_number_of_people()
     if people and people > 0:
         data['state']['open'] = True
-        data['sensors']['people_now_present']['value'] = people
+        data['sensors']['people_now_present'][0]['value'] = people
         base_msg = '1 person' if people == 1 else '%s people' % people
         data['state']['message'] = base_msg + ' present right now'
 
