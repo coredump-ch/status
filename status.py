@@ -43,7 +43,7 @@ def json_out():
         },
         'state': {
             'open': False,
-            'message': 'Open every monday from 20:00',
+            'message': 'Open every Monday from 20:00',
         },
         'contact': {
             'irc': 'irc://freenode.net/#coredump',
