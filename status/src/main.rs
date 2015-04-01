@@ -10,16 +10,16 @@ pub struct Location {
 
 #[derive(RustcEncodable)]
 pub struct State {
-    open:       bool,
-    message:    String,
+    open: bool,
+    message: String,
 }
 
 #[derive(RustcEncodable)]
 pub struct Contact {
-    irc:        String,
-    twitter:    String,
+    irc: String,
+    twitter: String,
     foursquare: String,
-    email:      String,
+    email: String,
 }
 
 #[derive(RustcEncodable)]
@@ -40,24 +40,24 @@ pub struct Status {
 fn main() {
 
     let status = Status {
-        api:    "0.13".to_string(),
-        space:  "coredump".to_string(),
-        logo:   "https://www.coredump.ch/logo.png".to_string(),
-        url:    "https://www.coredump.ch/".to_string(),
+        api: "0.13".to_string(),
+        space: "coredump".to_string(),
+        logo: "https://www.coredump.ch/logo.png".to_string(),
+        url: "https://www.coredump.ch/".to_string(),
         location: Location {
-            address:    "Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string(),
-            lat:        47.22936,
-            lon:        8.82949,
+            address: "Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string(),
+            lat: 47.22936,
+            lon: 8.82949,
         },
         state: State {
             open: false,
             message: "Open every Monday from 20:00".to_string(),
         },
         contact: Contact {
-            irc:        "irc://freenode.net/#coredump".to_string(),
-            twitter:    "@coredump_ch".to_string(),
+            irc: "irc://freenode.net/#coredump".to_string(),
+            twitter: "@coredump_ch".to_string(),
             foursquare: "525c20e5498e875d8231b1e5".to_string(),
-            email:      "danilo@coredump.ch".to_string(),
+            email: "danilo@coredump.ch".to_string(),
         },
         issue_report_channels: ["email", "twitter"],
         projects: [
