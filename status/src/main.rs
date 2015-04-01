@@ -23,12 +23,20 @@ pub struct Contact {
 }
 
 #[derive(RustcEncodable)]
+pub struct SpaceFED {
+    spacenet: bool,
+    spacesaml: bool,
+    spacephone: bool,
+}
+
+#[derive(RustcEncodable)]
 pub struct Status {
     api: String,
     space: String,
     logo: String,
     url: String,
     location: Location,
+    spacefed: SpaceFED,
     
     state: State,
     contact: Contact,
@@ -48,6 +56,11 @@ fn main() {
             address: "Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string(),
             lat: 47.22936,
             lon: 8.82949,
+        },
+        spacefed: SpaceFED {
+            spacenet: false,
+            spacesaml: false,
+            spacephone: false,
         },
         state: State {
             open: false,

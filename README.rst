@@ -3,6 +3,8 @@ Space API Implementation
 
 This is an implementation of the `SpaceAPI <http://spaceapi.net/>`_.
 
+API Documentation: http://spaceapi.net/documentation
+
 Development
 -----------
 
