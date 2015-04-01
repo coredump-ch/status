@@ -30,6 +30,17 @@ pub struct SpaceFED {
 }
 
 #[derive(RustcEncodable)]
+pub struct Feed {
+    _type: String,  // TODO: Convert this to "type" somehow
+    url: String,
+}
+
+#[derive(RustcEncodable)]
+pub struct Feeds {
+    blog: Feed,
+}
+
+#[derive(RustcEncodable)]
 pub struct Status {
     api: String,
     space: String,
@@ -42,6 +53,7 @@ pub struct Status {
     contact: Contact,
     issue_report_channels: [&'static str; 2],
 
+    feeds: Feeds,
     projects: [&'static str; 3],
 }
 
@@ -73,6 +85,12 @@ fn main() {
             email: "danilo@coredump.ch".to_string(),
         },
         issue_report_channels: ["email", "twitter"],
+        feeds: Feeds {
+            blog: Feed {
+                _type: "rss".to_string(),
+                url: "https://www.coredump.ch/feed/".to_string(),
+            },
+        },
         projects: [
             "https://www.coredump.ch/projekte/",
             "https://discourse.coredump.ch/c/projects",
