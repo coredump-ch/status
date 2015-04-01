@@ -1,5 +1,15 @@
 extern crate rustc_serialize;
+extern crate hyper;
+
+use std::io::Write;
+use std::net::Ipv4Addr;
+
 use rustc_serialize::json;
+use hyper::Server;
+use hyper::server::Request;
+use hyper::server::Response;
+use hyper::net::Fresh;
+
 
 #[derive(RustcEncodable)]
 pub struct Location {
@@ -57,7 +67,7 @@ pub struct Status {
     projects: [&'static str; 3],
 }
 
-fn main() {
+fn build_response_json() -> String {
 
     let status = Status {
         api: "0.13".to_string(),
@@ -97,6 +107,20 @@ fn main() {
             "https://github.com/coredump-ch/"
         ]
     };
-    let encoded = json::encode(&status).unwrap();
-    println!("{}", encoded);
+    json::encode(&status).unwrap()
+}
+
+fn status_endpoint(_: Request, res: Response<Fresh>) {
+    let mut res = res.start().unwrap();
+    let response_body = build_response_json();
+    res.write_all(response_body.as_bytes()).unwrap();
+    res.end().unwrap();
+}
+
+fn main() {
+    let ip = Ipv4Addr::new(127, 0, 0, 1);
+    let port = 3000;
+
+    println!("Starting HTTP server on {}:{}...", ip, port);
+    Server::http(status_endpoint).listen((ip, port)).unwrap();
 }
