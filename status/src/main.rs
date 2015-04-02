@@ -1,6 +1,8 @@
 extern crate rustc_serialize;
 extern crate hyper;
 
+mod spaceapi;
+
 use std::io::Write;
 use std::net::Ipv4Addr;
 
@@ -11,92 +13,36 @@ use hyper::server::Response;
 use hyper::net::Fresh;
 
 
-#[derive(RustcEncodable)]
-pub struct Location {
-    address: String,
-    lat: f64,
-    lon: f64,
-}
-
-#[derive(RustcEncodable)]
-pub struct State {
-    open: bool,
-    message: String,
-}
-
-#[derive(RustcEncodable)]
-pub struct Contact {
-    irc: String,
-    twitter: String,
-    foursquare: String,
-    email: String,
-}
-
-#[derive(RustcEncodable)]
-pub struct SpaceFED {
-    spacenet: bool,
-    spacesaml: bool,
-    spacephone: bool,
-}
-
-#[derive(RustcEncodable)]
-pub struct Feed {
-    _type: String,  // TODO: Convert this to "type" somehow
-    url: String,
-}
-
-#[derive(RustcEncodable)]
-pub struct Feeds {
-    blog: Feed,
-}
-
-#[derive(RustcEncodable)]
-pub struct Status {
-    api: String,
-    space: String,
-    logo: String,
-    url: String,
-    location: Location,
-    spacefed: SpaceFED,
-    
-    state: State,
-    contact: Contact,
-    issue_report_channels: [&'static str; 2],
-
-    feeds: Feeds,
-    projects: [&'static str; 3],
-}
-
 fn build_response_json() -> String {
 
-    let status = Status {
+    let status = spaceapi::Status {
         api: "0.13".to_string(),
         space: "coredump".to_string(),
         logo: "https://www.coredump.ch/logo.png".to_string(),
         url: "https://www.coredump.ch/".to_string(),
-        location: Location {
+        location: spaceapi::Location {
             address: "Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string(),
             lat: 47.22936,
             lon: 8.82949,
         },
-        spacefed: SpaceFED {
+        spacefed: spaceapi::SpaceFED {
             spacenet: false,
             spacesaml: false,
             spacephone: false,
         },
-        state: State {
+        state: spaceapi::State {
             open: false,
             message: "Open every Monday from 20:00".to_string(),
         },
-        contact: Contact {
+        contact: spaceapi::Contact {
             irc: "irc://freenode.net/#coredump".to_string(),
             twitter: "@coredump_ch".to_string(),
             foursquare: "525c20e5498e875d8231b1e5".to_string(),
             email: "danilo@coredump.ch".to_string(),
         },
         issue_report_channels: ["email", "twitter"],
-        feeds: Feeds {
-            blog: Feed {
+        feeds: spaceapi::Feeds {
+            blog: spaceapi::Feed {
                 _type: "rss".to_string(),
                 url: "https://www.coredump.ch/feed/".to_string(),
             },
