@@ -5,6 +5,7 @@ mod spaceapi;
 
 use std::io::Write;
 use std::net::Ipv4Addr;
+use std::env;
 
 use rustc_serialize::json;
 use hyper::Server;
@@ -65,7 +66,13 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
 
 fn main() {
     let ip = Ipv4Addr::new(127, 0, 0, 1);
-    let port = 3000;
+    let port : u16 = match env::var("PORT") {
+        Ok(val) => match val.parse::<u16>() {
+            Ok(val) => val,
+            Err(_) => 3000
+        },
+        Err(_) => 3000
+    };
 
     println!("Starting HTTP server on {}:{}...", ip, port);
     Server::http(status_endpoint).listen((ip, port)).unwrap();
