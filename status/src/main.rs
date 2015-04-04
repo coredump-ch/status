@@ -2,6 +2,7 @@
 
 extern crate rustc_serialize;
 extern crate hyper;
+extern crate redis;
 
 mod spaceapi;
 mod utils;
@@ -14,9 +15,21 @@ use hyper::Server;
 use hyper::server::Request;
 use hyper::server::Response;
 use hyper::net::Fresh;
+use redis::Commands;
+use redis::Connection;
+use redis::RedisError;
 
 
-fn build_response_json() -> String {
+fn build_response_json(con: Option<Connection>) -> String {
+
+    let result : i16 = match con {
+        Some(c) => match c.get("people_present") {
+            Ok(count) => count,
+            Err(e) => -2
+        },
+        None => -1
+    };
+    println!("People present: {}", result);
 
     let status = spaceapi::Status {
         api: "0.13".to_string(),
@@ -61,7 +74,17 @@ fn build_response_json() -> String {
 
 fn status_endpoint(_: Request, res: Response<Fresh>) {
     let mut res = res.start().unwrap();
-    let response_body = build_response_json();
+
+
+    let con : Option<Connection> = match redis::Client::open("redis://127.0.0.1/") {
+        Ok(client) => match client.get_connection() {
+            Ok(con) => Some(con),
+            Err(_) => None
+        },
+        Err(_) => None
+    };
+
+    let response_body = build_response_json(con);
     res.write_all(response_body.as_bytes()).unwrap();
     res.end().unwrap();
 }
