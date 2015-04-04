@@ -4,5 +4,5 @@ version = "0.0.1"
 authors = ["rnestler <raphael.nestler@gmail.com>"]
 
 [dependencies]
-rustc-serialize = "0.3"
-hyper = "0.3.7"
+rustc-serialize = "0.3.12"
+hyper = "0.3.9"
