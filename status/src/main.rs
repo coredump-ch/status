@@ -5,6 +5,7 @@ mod spaceapi;
 
 use std::io::Write;
 use std::net::Ipv4Addr;
+use std::env;
 
 use rustc_serialize::json;
 use hyper::Server;
@@ -63,9 +64,22 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
     res.end().unwrap();
 }
 
+/// Read the port number from the PORT env variable.
+/// If the variable is not set or cannot be parsed to u16,
+/// use 3000 as default port.
+fn get_port() -> u16 {
+    match env::var("PORT") {
+        Ok(val) => match val.parse::<u16>() {
+            Ok(val) => val,
+            Err(_) => 3000
+        },
+        Err(_) => 3000
+    }
+}
+
 fn main() {
     let ip = Ipv4Addr::new(127, 0, 0, 1);
-    let port = 3000;
+    let port = get_port();
 
     println!("Starting HTTP server on {}:{}...", ip, port);
     Server::http(status_endpoint).listen((ip, port)).unwrap();
