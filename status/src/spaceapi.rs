@@ -1,3 +1,7 @@
+extern crate rustc_serialize;
+use rustc_serialize::{Encodable, Encoder};
+
+
 #[derive(RustcEncodable)]
 pub struct Location {
     pub address: String,
@@ -26,10 +30,22 @@ pub struct SpaceFED {
     pub spacephone: bool,
 }
 
-#[derive(RustcEncodable)]
 pub struct Feed {
-    pub _type: String,  // TODO: Convert this to "type" somehow
+    pub _type: String,
     pub url: String,
+}
+
+// adapted from the generated code
+impl Encodable for Feed {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
+        match *self {
+            Feed { _type: ref p_type, url: ref p_url } =>
+                encoder.emit_struct("Feed", 2usize, |enc| -> _ {
+                    try!(enc.emit_struct_field( "type", 0usize, |enc| p_type.encode(enc)));
+                    return enc.emit_struct_field("url", 1usize, |enc| -> _ { (*p_url).encode(enc) });
+                }),
+        }
+    }
 }
 
 #[derive(RustcEncodable)]
