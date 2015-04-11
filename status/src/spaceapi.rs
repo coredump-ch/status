@@ -38,13 +38,12 @@ pub struct Feed {
 // adapted from the generated code
 impl Encodable for Feed {
     fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        match *self {
-            Feed { _type: ref p_type, url: ref p_url } =>
-                encoder.emit_struct("Feed", 2usize, |enc| -> _ {
-                    try!(enc.emit_struct_field( "type", 0usize, |enc| p_type.encode(enc)));
-                    return enc.emit_struct_field("url", 1usize, |enc| -> _ { (*p_url).encode(enc) });
-                }),
-        }
+        encoder.emit_struct("Feed", 2usize, |enc| {
+            try!(
+                enc.emit_struct_field("type", 0usize, |enc| self._type.encode(enc))
+            );
+            enc.emit_struct_field("url", 1usize, |enc| self.url.encode(enc))
+        })
     }
 }
 
