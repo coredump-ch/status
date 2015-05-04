@@ -6,7 +6,7 @@ use datastore::DataStoreError;
 
 
 /// A data store for Redis.
-struct RedisStore {
+pub struct RedisStore {
     client : Client,
 }
 
@@ -23,16 +23,14 @@ impl DataStore for RedisStore {
     fn store(&self, key: &str, value: &str) -> Result<(), DataStoreError> {
         let con = try!(self.client.get_connection());
 
-        println!("Storing {} in {}", value, key);
-        try!(con.set("key", "value"));
+        try!(con.set(key, value));
         Ok(())
     }
 
     fn retrieve(&self, key: &str) -> Result<String, DataStoreError> {
         let con = try!(self.client.get_connection());
 
-        println!("Return {}", key);
-        Ok(try!(con.get("key")))
+        Ok(try!(con.get(key)))
     }
 
 }

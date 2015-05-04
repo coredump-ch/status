@@ -21,19 +21,10 @@ use hyper::server::Request;
 use hyper::server::Response;
 use hyper::net::Fresh;
 
+use datastore::DataStore;
 
-fn build_response_json() -> String {
 
-    /*let result : i16 = match con {
-        Some(c) => match c.get("people_present") {
-            Ok(count) => count,
-            Err(e) => -2
-        },
-        None => -1
-    };
-    println!("People present: {}", result);
-    */
-
+fn build_response_json(people_present: Option<u32>) -> String {
     let status = spaceapi::Status {
         api: "0.13".to_string(),
         space: "coredump".to_string(),
@@ -70,7 +61,17 @@ fn build_response_json() -> String {
             "https://www.coredump.ch/projekte/",
             "https://discourse.coredump.ch/c/projects",
             "https://github.com/coredump-ch/"
-        ]
+        ],
+        sensors: spaceapi::Sensors {
+            people_now_present: [
+                spaceapi::PeopleNowPresentSensor {
+                    value: people_present,
+                    location: Some("Hackerspace".to_string()),
+                    name: None,
+                    description: None,
+                },
+            ],
+        },
     };
     json::encode(&status).unwrap()
 }
@@ -78,18 +79,16 @@ fn build_response_json() -> String {
 fn status_endpoint(_: Request, res: Response<Fresh>) {
     let mut res = res.start().unwrap();
 
-
-    /*
-    let con : Option<Connection> = match redis::Client::open("redis://127.0.0.1/") {
-        Ok(client) => match client.get_connection() {
-            Ok(con) => Some(con),
-            Err(_) => None
+    let datastore = redis_store::RedisStore::new().unwrap();
+    let people_present: Option<u32> = match datastore.retrieve("people_present") {
+        Ok(v) => match v.parse::<u32>() {
+            Ok(i) => Some(i),
+            Err(_) => None,
         },
-        Err(_) => None
+        Err(_) => None,
     };
-    */
 
-    let response_body = build_response_json();
+    let response_body = build_response_json(people_present);
     res.write_all(response_body.as_bytes()).unwrap();
     res.end().unwrap();
 }

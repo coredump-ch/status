@@ -54,15 +54,15 @@ pub struct Feeds {
 
 #[derive(RustcEncodable)]
 pub struct PeopleNowPresentSensor {
-    pub value : u8,
-    pub location : String,
-    pub name : Option<String>,
-    pub description : Option<String>,
+    pub value: Option<u32>,
+    pub location: Option<String>,
+    pub name: Option<String>,
+    pub description: Option<String>,
 }
 
 #[derive(RustcEncodable)]
 pub struct Sensors {
-    pub people_now_present : PeopleNowPresentSensor,
+    pub people_now_present: [PeopleNowPresentSensor; 1],
 }
 
 #[derive(RustcEncodable)]
@@ -80,4 +80,5 @@ pub struct Status {
 
     pub feeds: Feeds,
     pub projects: [&'static str; 3],
+    pub sensors: Sensors,
 }
