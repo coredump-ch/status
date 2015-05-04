@@ -1,4 +1,7 @@
 //! The main entry point for the SpaceAPi server.
+//!
+//! Running this code starts a HTTP server instance. The default port is 3000, but you can set your
+//! own favorite port by exporting the `PORT` environment variable.
 
 extern crate rustc_serialize;
 extern crate hyper;

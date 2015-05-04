@@ -7,7 +7,7 @@ use redis;
 /// A DataStore needs to implement store and retrieve methods.
 pub trait DataStore {
     fn store(&self, key: &str, value: &str) -> Result<(), DataStoreError>;
-    fn retrieve(&self, key: &str) -> Result<&str, DataStoreError>;
+    fn retrieve(&self, key: &str) -> Result<String, DataStoreError>;
 }
 
 /// A struct representing a datastore error.

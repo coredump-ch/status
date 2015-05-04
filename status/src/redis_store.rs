@@ -1,4 +1,5 @@
 use redis::Client;
+use redis::Commands;
 
 use datastore::DataStore;
 use datastore::DataStoreError;
@@ -16,16 +17,22 @@ impl RedisStore {
     }
 }
 
+/// Implement the DataStore methods for Redis
 impl DataStore for RedisStore {
 
     fn store(&self, key: &str, value: &str) -> Result<(), DataStoreError> {
+        let con = try!(self.client.get_connection());
+
         println!("Storing {} in {}", value, key);
+        try!(con.set("key", "value"));
         Ok(())
     }
 
-    fn retrieve(&self, key: &str) -> Result<&str, DataStoreError> {
+    fn retrieve(&self, key: &str) -> Result<String, DataStoreError> {
+        let con = try!(self.client.get_connection());
+
         println!("Return {}", key);
-        Ok("value")
+        Ok(try!(con.get("key")))
     }
 
 }
