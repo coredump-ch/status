@@ -4,8 +4,10 @@ extern crate rustc_serialize;
 extern crate hyper;
 extern crate redis;
 
-mod spaceapi;
 mod utils;
+mod spaceapi;
+mod datastore;
+mod redis_store;
 
 use std::io::Write;
 use std::net::Ipv4Addr;
@@ -15,14 +17,11 @@ use hyper::Server;
 use hyper::server::Request;
 use hyper::server::Response;
 use hyper::net::Fresh;
-use redis::Commands;
-use redis::Connection;
-use redis::RedisError;
 
 
-fn build_response_json(con: Option<Connection>) -> String {
+fn build_response_json() -> String {
 
-    let result : i16 = match con {
+    /*let result : i16 = match con {
         Some(c) => match c.get("people_present") {
             Ok(count) => count,
             Err(e) => -2
@@ -30,6 +29,7 @@ fn build_response_json(con: Option<Connection>) -> String {
         None => -1
     };
     println!("People present: {}", result);
+    */
 
     let status = spaceapi::Status {
         api: "0.13".to_string(),
@@ -76,6 +76,7 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
     let mut res = res.start().unwrap();
 
 
+    /*
     let con : Option<Connection> = match redis::Client::open("redis://127.0.0.1/") {
         Ok(client) => match client.get_connection() {
             Ok(con) => Some(con),
@@ -83,8 +84,9 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
         },
         Err(_) => None
     };
+    */
 
-    let response_body = build_response_json(con);
+    let response_body = build_response_json();
     res.write_all(response_body.as_bytes()).unwrap();
     res.end().unwrap();
 }
