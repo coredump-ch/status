@@ -1,7 +1,10 @@
 [package]
 name = "status"
 version = "0.0.1"
-authors = ["rnestler <raphael.nestler@gmail.com>"]
+authors = [
+    "Raphael Nestler <raphael.nestler@gmail.com>",
+    "Danilo Bargen <mail@dbrgn.ch>",
+]
 
 [dependencies]
 rustc-serialize = "0.3.12"
