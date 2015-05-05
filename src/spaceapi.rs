@@ -55,7 +55,7 @@ pub struct Feeds {
 
 #[derive(RustcEncodable)]
 pub struct Sensors {
-    pub people_now_present: [PeopleNowPresentSensor; 1],
+    pub people_now_present: Vec<PeopleNowPresentSensor>,
 }
 
 #[derive(RustcEncodable)]
@@ -92,9 +92,9 @@ pub struct Status {
 
     pub state: State,
     pub contact: Contact,
-    pub issue_report_channels: [&'static str; 2],
+    pub issue_report_channels: Vec<String>,
 
     pub feeds: Feeds,
-    pub projects: [&'static str; 3],
+    pub projects: Vec<String>,
     pub sensors: Sensors,
 }

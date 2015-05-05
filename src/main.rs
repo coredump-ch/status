@@ -53,20 +53,23 @@ fn build_response_json(people_present: Option<u32>) -> String {
             foursquare: "525c20e5498e875d8231b1e5".to_string(),
             email: "danilo@coredump.ch".to_string(),
         },
-        issue_report_channels: ["email", "twitter"],
+        issue_report_channels: vec![
+            "email".to_string(),
+            "twitter".to_string(),
+        ],
         feeds: spaceapi::Feeds {
             blog: spaceapi::Feed {
                 _type: "rss".to_string(),
                 url: "https://www.coredump.ch/feed/".to_string(),
             },
         },
-        projects: [
-            "https://www.coredump.ch/projekte/",
-            "https://discourse.coredump.ch/c/projects",
-            "https://github.com/coredump-ch/"
+        projects: vec![
+            "https://www.coredump.ch/projekte/".to_string(),
+            "https://discourse.coredump.ch/c/projects".to_string(),
+            "https://github.com/coredump-ch/".to_string(),
         ],
         sensors: spaceapi::Sensors {
-            people_now_present: [
+            people_now_present: vec![
                 spaceapi::PeopleNowPresentSensor {
                     value: people_present,
                     location: Some("Hackerspace".to_string()),
