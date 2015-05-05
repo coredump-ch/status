@@ -56,6 +56,7 @@ pub struct Feeds {
 #[derive(RustcEncodable)]
 pub struct Sensors {
     pub people_now_present: Vec<PeopleNowPresentSensor>,
+    pub temperature: Vec<TemperatureSensor>,
 }
 
 #[derive(RustcEncodable)]
@@ -68,7 +69,7 @@ pub struct PeopleNowPresentSensor {
 
 #[derive(RustcEncodable)]
 pub struct TemperatureSensor {
-    pub value: u32,
+    pub value: f32,
     pub unit: String,
     pub location: String,
     pub name: Option<String>,

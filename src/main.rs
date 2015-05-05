@@ -24,13 +24,26 @@ use hyper::net::Fresh;
 use datastore::DataStore;
 
 
-fn build_response_json(people_present: Option<u32>) -> String {
+fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f32>) -> String {
     let people_present_sensor = match people_present {
         Some(count) => vec![
             spaceapi::PeopleNowPresentSensor {
                 value: count,
                 location: Some("Hackerspace".to_string()),
                 name: None,
+                description: None,
+            }
+        ],
+        None => Vec::new(),
+    };
+
+    let temperature_sensor = match raspi_temperature {
+        Some(degrees) => vec![
+            spaceapi::TemperatureSensor {
+                value: degrees,
+                unit: "°C".to_string(),
+                location: "Hackerspace".to_string(),
+                name: Some("Raspberry CPU".to_string()),
                 description: None,
             }
         ],
@@ -82,6 +95,7 @@ fn build_response_json(people_present: Option<u32>) -> String {
         ],
         sensors: spaceapi::Sensors {
             people_now_present: people_present_sensor,
+            temperature: temperature_sensor,
         },
     };
     json::encode(&status).unwrap()
@@ -98,8 +112,15 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
         },
         Err(_) => None,
     };
+    let raspi_temperature: Option<f32> = match datastore.retrieve("raspi_temperature") {
+        Ok(v) => match v.parse::<f32>() {
+            Ok(i) => Some(i),
+            Err(_) => None,
+        },
+        Err(_) => None,
+    };
 
-    let response_body = build_response_json(people_present);
+    let response_body = build_response_json(people_present, raspi_temperature);
     res.write_all(response_body.as_bytes()).unwrap();
     res.end().unwrap();
 }
