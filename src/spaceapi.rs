@@ -60,8 +60,17 @@ pub struct Sensors {
 
 #[derive(RustcEncodable)]
 pub struct PeopleNowPresentSensor {
-    pub value: Option<u32>,
+    pub value: Option<u32>,  // TODO: This should not be an option
     pub location: Option<String>,
+    pub name: Option<String>,
+    pub description: Option<String>,
+}
+
+#[derive(RustcEncodable)]
+pub struct TemperatureSensor {
+    pub value: u32,
+    pub unit: String,
+    pub location: String,
     pub name: Option<String>,
     pub description: Option<String>,
 }
