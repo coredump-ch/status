@@ -35,7 +35,8 @@ pub struct Feed {
     pub url: String,
 }
 
-// adapted from the generated code
+/// Adapted from the generated code.
+/// This is required to translate the `_type` field in the struct to a JSON field called `type`.
 impl Encodable for Feed {
     fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Feed", 2usize, |enc| {
@@ -53,6 +54,11 @@ pub struct Feeds {
 }
 
 #[derive(RustcEncodable)]
+pub struct Sensors {
+    pub people_now_present: [PeopleNowPresentSensor; 1],
+}
+
+#[derive(RustcEncodable)]
 pub struct PeopleNowPresentSensor {
     pub value: Option<u32>,
     pub location: Option<String>,
@@ -61,8 +67,8 @@ pub struct PeopleNowPresentSensor {
 }
 
 #[derive(RustcEncodable)]
-pub struct Sensors {
-    pub people_now_present: [PeopleNowPresentSensor; 1],
+pub struct Cache {
+    pub schedule: String,
 }
 
 #[derive(RustcEncodable)]
@@ -73,6 +79,7 @@ pub struct Status {
     pub url: String,
     pub location: Location,
     pub spacefed: SpaceFED,
+    pub cache: Cache,
 
     pub state: State,
     pub contact: Contact,

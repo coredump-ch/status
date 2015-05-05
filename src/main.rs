@@ -40,6 +40,9 @@ fn build_response_json(people_present: Option<u32>) -> String {
             spacesaml: false,
             spacephone: false,
         },
+        cache: spaceapi::Cache {
+            schedule: "m.02".to_string(),
+        },
         state: spaceapi::State {
             open: false,
             message: "Open every Monday from 20:00".to_string(),
