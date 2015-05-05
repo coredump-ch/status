@@ -132,6 +132,8 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
         let mut headers = res.headers_mut();
         headers.set(header::ContentLength(body_bytes.len() as u64));
         headers.set(header::ContentType("application/json; charset=utf-8".parse().unwrap()));
+        headers.set(header::CacheControl(vec![header::CacheDirective::NoCache]));
+        headers.set(header::AccessControlAllowOrigin::Any);
     }
 
     // Write response body
