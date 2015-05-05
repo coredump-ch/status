@@ -35,7 +35,8 @@ pub struct Feed {
     pub url: String,
 }
 
-// adapted from the generated code
+/// Adapted from the generated code.
+/// This is required to translate the `_type` field in the struct to a JSON field called `type`.
 impl Encodable for Feed {
     fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Feed", 2usize, |enc| {
@@ -53,6 +54,34 @@ pub struct Feeds {
 }
 
 #[derive(RustcEncodable)]
+pub struct Sensors {
+    pub people_now_present: Vec<PeopleNowPresentSensor>,
+    pub temperature: Vec<TemperatureSensor>,
+}
+
+#[derive(RustcEncodable)]
+pub struct PeopleNowPresentSensor {
+    pub value: u32,
+    pub location: Option<String>,
+    pub name: Option<String>,
+    pub description: Option<String>,
+}
+
+#[derive(RustcEncodable)]
+pub struct TemperatureSensor {
+    pub value: f32,
+    pub unit: String,
+    pub location: String,
+    pub name: Option<String>,
+    pub description: Option<String>,
+}
+
+#[derive(RustcEncodable)]
+pub struct Cache {
+    pub schedule: String,
+}
+
+#[derive(RustcEncodable)]
 pub struct Status {
     pub api: String,
     pub space: String,
@@ -60,11 +89,13 @@ pub struct Status {
     pub url: String,
     pub location: Location,
     pub spacefed: SpaceFED,
+    pub cache: Cache,
 
     pub state: State,
     pub contact: Contact,
-    pub issue_report_channels: [&'static str; 2],
+    pub issue_report_channels: Vec<String>,
 
     pub feeds: Feeds,
-    pub projects: [&'static str; 3],
+    pub projects: Vec<String>,
+    pub sensors: Sensors,
 }
