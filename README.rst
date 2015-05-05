@@ -36,3 +36,11 @@ You can access the database with the ``redis-cli`` tool::
     "1"
     127.0.0.1:6379> KEYS *
     1) "people_present"
+
+Storage Schema
+--------------
+
+We currently store data in the following two redis keys:
+
+- people_present (integer)
+- raspi_temperature (float)
