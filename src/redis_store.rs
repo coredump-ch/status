@@ -33,6 +33,12 @@ impl DataStore for RedisStore {
         Ok(try!(con.get(key)))
     }
 
+    fn delete(&self, key: &str) -> Result<(), DataStoreError> {
+        let con = try!(self.client.get_connection());
+
+        Ok(try!(con.del(key)))
+    }
+
 }
 
 #[cfg(test)]
@@ -46,6 +52,14 @@ mod test {
         rs.store("key", "value");
         let result = rs.retrieve("key").unwrap();
         assert_eq!(result, "value");
+        rs.delete("key");
+    }
+
+    #[test]
+    #[should_panic(expected = "response was nil")]
+    fn nonexistant() {
+        let rs = redis_store::RedisStore::new().unwrap();
+        rs.retrieve("nonexistant").unwrap();
     }
 
 }

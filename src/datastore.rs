@@ -5,6 +5,7 @@ use redis;
 pub trait DataStore {
     fn store(&self, key: &str, value: &str) -> Result<(), DataStoreError>;
     fn retrieve(&self, key: &str) -> Result<String, DataStoreError>;
+    fn delete(&self, key: &str) -> Result<(), DataStoreError>;
 }
 
 /// A struct representing a datastore error.
