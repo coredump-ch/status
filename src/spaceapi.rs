@@ -60,7 +60,7 @@ pub struct Sensors {
 
 #[derive(RustcEncodable)]
 pub struct PeopleNowPresentSensor {
-    pub value: Option<u32>,  // TODO: This should not be an option
+    pub value: u32,
     pub location: Option<String>,
     pub name: Option<String>,
     pub description: Option<String>,

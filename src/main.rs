@@ -28,7 +28,7 @@ fn build_response_json(people_present: Option<u32>) -> String {
     let people_present_sensor = match people_present {
         Some(count) => vec![
             spaceapi::PeopleNowPresentSensor {
-                value: people_present,
+                value: count,
                 location: Some("Hackerspace".to_string()),
                 name: None,
                 description: None,
