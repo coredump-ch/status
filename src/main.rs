@@ -25,6 +25,18 @@ use datastore::DataStore;
 
 
 fn build_response_json(people_present: Option<u32>) -> String {
+    let people_present_sensor = match people_present {
+        Some(count) => vec![
+            spaceapi::PeopleNowPresentSensor {
+                value: people_present,
+                location: Some("Hackerspace".to_string()),
+                name: None,
+                description: None,
+            }
+        ],
+        None => Vec::new(),
+    };
+
     let status = spaceapi::Status {
         api: "0.13".to_string(),
         space: "coredump".to_string(),
@@ -69,14 +81,7 @@ fn build_response_json(people_present: Option<u32>) -> String {
             "https://github.com/coredump-ch/".to_string(),
         ],
         sensors: spaceapi::Sensors {
-            people_now_present: vec![
-                spaceapi::PeopleNowPresentSensor {
-                    value: people_present,
-                    location: Some("Hackerspace".to_string()),
-                    name: None,
-                    description: None,
-                },
-            ],
+            people_now_present: people_present_sensor,
         },
     };
     json::encode(&status).unwrap()
