@@ -20,6 +20,7 @@ use hyper::Server;
 use hyper::server::Request;
 use hyper::server::Response;
 use hyper::net::Fresh;
+use hyper::header;
 
 use datastore::DataStore;
 
@@ -102,8 +103,10 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
 }
 
 fn status_endpoint(_: Request, res: Response<Fresh>) {
-    let mut res = res.start().unwrap();
+    // Move response into mutable variable
+    let mut res = res;
 
+    // Fetch data from datastore
     let datastore = redis_store::RedisStore::new().unwrap();
     let people_present: Option<u32> = match datastore.retrieve("people_present") {
         Ok(v) => match v.parse::<u32>() {
@@ -120,9 +123,22 @@ fn status_endpoint(_: Request, res: Response<Fresh>) {
         Err(_) => None,
     };
 
-    let response_body = build_response_json(people_present, raspi_temperature);
-    res.write_all(response_body.as_bytes()).unwrap();
-    res.end().unwrap();
+    // Get response body
+    let body = build_response_json(people_present, raspi_temperature);
+    let body_bytes = body.as_bytes();
+
+    // Set headers
+    {
+        let mut headers = res.headers_mut();
+        headers.set(header::ContentLength(body_bytes.len() as u64));
+        headers.set(header::ContentType("application/json; charset=utf-8".parse().unwrap()));
+    }
+
+    // Write response body
+    let mut stream = res.start().unwrap();
+    stream.write_all(body_bytes).unwrap();
+
+    stream.end().unwrap();
 }
 
 fn main() {
