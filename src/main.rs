@@ -102,10 +102,7 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
     json::encode(&status).unwrap()
 }
 
-fn status_endpoint(_: Request, res: Response<Fresh>) {
-    // Move response into mutable variable
-    let mut res = res;
-
+fn status_endpoint(_: Request, mut res: Response<Fresh>) {
     // Fetch data from datastore
     let datastore = redis_store::RedisStore::new().unwrap();
     let people_present: Option<u32> = match datastore.retrieve("people_present") {
