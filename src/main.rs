@@ -125,6 +125,7 @@ fn status_endpoint(_: Request, mut res: Response<Fresh>) {
     let body_bytes = body.as_bytes();
 
     // Set headers
+    // A new scope is used here because of the mutable borrow.
     {
         let mut headers = res.headers_mut();
         headers.set(header::ContentLength(body_bytes.len() as u64));
