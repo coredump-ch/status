@@ -41,7 +41,7 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
         Some(degrees) => vec![
             spaceapi::TemperatureSensor {
                 value: degrees,
-                unit: "\u{b0}C".to_string(),
+                unit: "°C".to_string(),
                 location: "Hackerspace".to_string(),
                 name: Some("Raspberry CPU".to_string()),
                 description: None,
@@ -176,7 +176,7 @@ mod test {
                     \"name\":null,\"description\":null\
                 }],\
                 \"temperature\":[{\
-                    \"value\":42.133701,\"unit\":\"\u{b0}C\",\
+                    \"value\":42.133701,\"unit\":\"°C\",\
                     \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\"description\":null\
                 }]\
             }\
