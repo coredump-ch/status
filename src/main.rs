@@ -132,3 +132,54 @@ fn main() {
     println!("Starting HTTP server on {}:{}...", ip, port);
     Server::http(status_endpoint).listen((ip, port)).unwrap();
 }
+
+#[cfg(test)]
+mod test {
+    use super::build_response_json;
+
+    #[test]
+    /// Verify that the response JSON looks OK.
+    fn verify_response_json() {
+        let people_present = Some(23);
+        let temperature = Some(42.1337);
+        let json = build_response_json(people_present, temperature);
+        assert_eq!(json, "{\
+            \"api\":\"0.13\",\
+            \"space\":\"coredump\",\
+            \"logo\":\"https://www.coredump.ch/logo.png\",\
+            \"url\":\"https://www.coredump.ch/\",\
+            \"location\":{\
+                \"address\":\"Spinnereistrasse 2, 8640 Rapperswil, Switzerland\",\
+                \"lat\":47.22936,\"lon\":8.82949\
+            },\
+            \"spacefed\":{\"spacenet\":false,\"spacesaml\":false,\"spacephone\":false},\
+            \"cache\":{\"schedule\":\"m.02\"},\
+            \"state\":{\"open\":false,\"message\":\"Open every Monday from 20:00\"},\
+            \"contact\":{\
+                \"irc\":\"irc://freenode.net/#coredump\",\
+                \"twitter\":\"@coredump_ch\",\
+                \"foursquare\":\"525c20e5498e875d8231b1e5\",\
+                \"email\":\"danilo@coredump.ch\"\
+            },\
+            \"issue_report_channels\":[\"email\",\"twitter\"],\
+            \"feeds\":{\
+                \"blog\":{\"type\":\"rss\",\"url\":\"https://www.coredump.ch/feed/\"}\
+            },\
+            \"projects\":[\
+                \"https://www.coredump.ch/projekte/\",\
+                \"https://discourse.coredump.ch/c/projects\",\
+                \"https://github.com/coredump-ch/\"\
+            ],\
+            \"sensors\":{\
+                \"people_now_present\":[{\
+                    \"value\":23,\"location\":\"Hackerspace\",\
+                    \"name\":null,\"description\":null\
+                }],\
+                \"temperature\":[{\
+                    \"value\":42.133701,\"unit\":\"°C\",\
+                    \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\"description\":null\
+                }]\
+            }\
+        }");
+    }
+}
