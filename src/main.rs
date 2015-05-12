@@ -15,7 +15,7 @@ mod redis_store;
 use std::io::Write;
 use std::net::Ipv4Addr;
 
-use rustc_serialize::json;
+use rustc_serialize::json::ToJson;
 use hyper::Server;
 use hyper::server::Request;
 use hyper::server::Response;
@@ -28,7 +28,7 @@ use spaceapi::Optional::{Value, Absent};
 
 fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f32>) -> String {
     let people_present_sensor = match people_present {
-        Some(count) => vec![
+        Some(count) => Value(vec![
             spaceapi::PeopleNowPresentSensor {
                 value: count,
                 location: Value("Hackerspace".to_string()),
@@ -36,21 +36,21 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
                 description: Absent,
                 names: Absent,
             }
-        ],
-        None => Vec::new(),
+        ]),
+        None => Absent,
     };
 
     let temperature_sensor = match raspi_temperature {
-        Some(degrees) => vec![
+        Some(degrees) => Value(vec![
             spaceapi::TemperatureSensor {
                 value: degrees,
                 unit: "°C".to_string(),
                 location: "Hackerspace".to_string(),
-                name: Some("Raspberry CPU".to_string()),
-                description: None,
+                name: Value("Raspberry CPU".to_string()),
+                description: Absent,
             }
-        ],
-        None => Vec::new(),
+        ]),
+        None => Absent,
     };
 
     let status = spaceapi::Status {
@@ -119,7 +119,7 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
         }),
 
     };
-    json::encode(&status).unwrap()
+    status.to_json().to_string()
 }
 
 fn status_endpoint(_: Request, mut res: Response<Fresh>) {
@@ -181,26 +181,22 @@ mod test {
         let json = build_response_json(people_present, temperature);
         assert_eq!(json, "{\
             \"api\":\"0.13\",\
-            \"space\":\"coredump\",\
-            \"logo\":\"https://www.coredump.ch/logo.png\",\
-            \"url\":\"https://www.coredump.ch/\",\
+            \"cache\":{\"schedule\":\"m.02\"},\
+            \"contact\":{\
+                \"email\":\"danilo@coredump.ch\",\
+                \"foursquare\":\"525c20e5498e875d8231b1e5\",\
+                \"irc\":\"irc://freenode.net/#coredump\",\
+                \"twitter\":\"@coredump_ch\"\
+            },\
+            \"feeds\":{\
+                \"blog\":{\"type\":\"rss\",\"url\":\"https://www.coredump.ch/feed/\"}\
+            },\
+            \"issue_report_channels\":[\"email\",\"twitter\"],\
             \"location\":{\
                 \"address\":\"Spinnereistrasse 2, 8640 Rapperswil, Switzerland\",\
                 \"lat\":47.22936,\"lon\":8.82949\
             },\
-            \"spacefed\":{\"spacenet\":false,\"spacesaml\":false,\"spacephone\":false},\
-            \"cache\":{\"schedule\":\"m.02\"},\
-            \"state\":{\"open\":false,\"message\":\"Open every Monday from 20:00\"},\
-            \"contact\":{\
-                \"irc\":\"irc://freenode.net/#coredump\",\
-                \"twitter\":\"@coredump_ch\",\
-                \"foursquare\":\"525c20e5498e875d8231b1e5\",\
-                \"email\":\"danilo@coredump.ch\"\
-            },\
-            \"issue_report_channels\":[\"email\",\"twitter\"],\
-            \"feeds\":{\
-                \"blog\":{\"type\":\"rss\",\"url\":\"https://www.coredump.ch/feed/\"}\
-            },\
+            \"logo\":\"https://www.coredump.ch/logo.png\",\
             \"projects\":[\
                 \"https://www.coredump.ch/projekte/\",\
                 \"https://discourse.coredump.ch/c/projects\",\
@@ -208,14 +204,17 @@ mod test {
             ],\
             \"sensors\":{\
                 \"people_now_present\":[{\
-                    \"value\":23,\"location\":\"Hackerspace\",\
-                    \"name\":null,\"description\":null\
+                    \"location\":\"Hackerspace\",\"value\":23\
                 }],\
                 \"temperature\":[{\
-                    \"value\":42.133701,\"unit\":\"°C\",\
-                    \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\"description\":null\
+                    \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\
+                    \"unit\":\"°C\",\"value\":42.133701\
                 }]\
-            }\
+            },\
+            \"space\":\"coredump\",\
+            \"spacefed\":{\"spacenet\":false,\"spacephone\":false,\"spacesaml\":false},\
+            \"state\":{\"message\":\"Open every Monday from 20:00\",\"open\":false},\
+            \"url\":\"https://www.coredump.ch/\"\
         }");
     }
 }
