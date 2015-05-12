@@ -23,6 +23,7 @@ use hyper::net::Fresh;
 use hyper::header;
 
 use datastore::DataStore;
+use spaceapi::Optional::{Value, Absent};
 
 
 fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f32>) -> String {
@@ -30,9 +31,10 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
         Some(count) => vec![
             spaceapi::PeopleNowPresentSensor {
                 value: count,
-                location: Some("Hackerspace".to_string()),
-                name: None,
-                description: None,
+                location: Value("Hackerspace".to_string()),
+                name: Absent,
+                description: Absent,
+                names: Absent,
             }
         ],
         None => Vec::new(),
@@ -52,52 +54,70 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
     };
 
     let status = spaceapi::Status {
+
+        // Hackerspace properties
         api: "0.13".to_string(),
         space: "coredump".to_string(),
         logo: "https://www.coredump.ch/logo.png".to_string(),
         url: "https://www.coredump.ch/".to_string(),
         location: spaceapi::Location {
-            address: "Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string(),
+            address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
             lat: 47.22936,
             lon: 8.82949,
         },
-        spacefed: spaceapi::SpaceFED {
+        contact: spaceapi::Contact {
+            irc: Value("irc://freenode.net/#coredump".to_string()),
+            twitter: Value("@coredump_ch".to_string()),
+            foursquare: Value("525c20e5498e875d8231b1e5".to_string()),
+            email: Value("danilo@coredump.ch".to_string()),
+        },
+
+        // Hackerspace features / projects
+        spacefed: Value(spaceapi::Spacefed {
             spacenet: false,
             spacesaml: false,
             spacephone: false,
-        },
-        cache: spaceapi::Cache {
+        }),
+        projects: Value(vec![
+            "https://www.coredump.ch/projekte/".to_string(),
+            "https://discourse.coredump.ch/c/projects".to_string(),
+            "https://github.com/coredump-ch/".to_string(),
+        ]),
+        cam: Absent,
+        feeds: Value(spaceapi::Feeds {
+            blog: Value(spaceapi::Feed {
+                _type: Value("rss".to_string()),
+                url: "https://www.coredump.ch/feed/".to_string(),
+            }),
+            wiki: Absent,
+            calendar: Absent,
+            flickr: Absent,
+        }),
+        events: Absent,
+        radio_show: Absent,
+
+        // SpaceAPI internal usage
+        cache: Value(spaceapi::Cache {
             schedule: "m.02".to_string(),
-        },
-        state: spaceapi::State {
-            open: false,
-            message: "Open every Monday from 20:00".to_string(),
-        },
-        contact: spaceapi::Contact {
-            irc: "irc://freenode.net/#coredump".to_string(),
-            twitter: "@coredump_ch".to_string(),
-            foursquare: "525c20e5498e875d8231b1e5".to_string(),
-            email: "danilo@coredump.ch".to_string(),
-        },
+        }),
         issue_report_channels: vec![
             "email".to_string(),
             "twitter".to_string(),
         ],
-        feeds: spaceapi::Feeds {
-            blog: spaceapi::Feed {
-                _type: "rss".to_string(),
-                url: "https://www.coredump.ch/feed/".to_string(),
-            },
+
+        // Mutable data
+        state: spaceapi::State {
+            open: Some(false),
+            message: Value("Open every Monday from 20:00".to_string()),
+            lastchange: Absent,
+            trigger_person: Absent,
+            icon: Absent,
         },
-        projects: vec![
-            "https://www.coredump.ch/projekte/".to_string(),
-            "https://discourse.coredump.ch/c/projects".to_string(),
-            "https://github.com/coredump-ch/".to_string(),
-        ],
-        sensors: spaceapi::Sensors {
+        sensors: Value(spaceapi::Sensors {
             people_now_present: people_present_sensor,
             temperature: temperature_sensor,
-        },
+        }),
+
     };
     json::encode(&status).unwrap()
 }
