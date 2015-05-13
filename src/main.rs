@@ -15,7 +15,7 @@ mod redis_store;
 use std::io::Write;
 use std::net::Ipv4Addr;
 
-use rustc_serialize::json;
+use rustc_serialize::json::ToJson;
 use hyper::Server;
 use hyper::server::Request;
 use hyper::server::Response;
@@ -23,83 +23,103 @@ use hyper::net::Fresh;
 use hyper::header;
 
 use datastore::DataStore;
+use spaceapi::Optional::{Value, Absent};
 
 
 fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f32>) -> String {
     let people_present_sensor = match people_present {
-        Some(count) => vec![
+        Some(count) => Value(vec![
             spaceapi::PeopleNowPresentSensor {
                 value: count,
-                location: Some("Hackerspace".to_string()),
-                name: None,
-                description: None,
+                location: Value("Hackerspace".to_string()),
+                name: Absent,
+                description: Absent,
+                names: Absent,
             }
-        ],
-        None => Vec::new(),
+        ]),
+        None => Absent,
     };
 
     let temperature_sensor = match raspi_temperature {
-        Some(degrees) => vec![
+        Some(degrees) => Value(vec![
             spaceapi::TemperatureSensor {
                 value: degrees,
                 unit: "°C".to_string(),
                 location: "Hackerspace".to_string(),
-                name: Some("Raspberry CPU".to_string()),
-                description: None,
+                name: Value("Raspberry CPU".to_string()),
+                description: Absent,
             }
-        ],
-        None => Vec::new(),
+        ]),
+        None => Absent,
     };
 
     let status = spaceapi::Status {
+
+        // Hackerspace properties
         api: "0.13".to_string(),
         space: "coredump".to_string(),
         logo: "https://www.coredump.ch/logo.png".to_string(),
         url: "https://www.coredump.ch/".to_string(),
         location: spaceapi::Location {
-            address: "Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string(),
+            address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
             lat: 47.22936,
             lon: 8.82949,
         },
-        spacefed: spaceapi::SpaceFED {
+        contact: spaceapi::Contact {
+            irc: Value("irc://freenode.net/#coredump".to_string()),
+            twitter: Value("@coredump_ch".to_string()),
+            foursquare: Value("525c20e5498e875d8231b1e5".to_string()),
+            email: Value("danilo@coredump.ch".to_string()),
+        },
+
+        // Hackerspace features / projects
+        spacefed: Value(spaceapi::Spacefed {
             spacenet: false,
             spacesaml: false,
             spacephone: false,
-        },
-        cache: spaceapi::Cache {
+        }),
+        projects: Value(vec![
+            "https://www.coredump.ch/projekte/".to_string(),
+            "https://discourse.coredump.ch/c/projects".to_string(),
+            "https://github.com/coredump-ch/".to_string(),
+        ]),
+        cam: Absent,
+        feeds: Value(spaceapi::Feeds {
+            blog: Value(spaceapi::Feed {
+                _type: Value("rss".to_string()),
+                url: "https://www.coredump.ch/feed/".to_string(),
+            }),
+            wiki: Absent,
+            calendar: Absent,
+            flickr: Absent,
+        }),
+        events: Absent,
+        radio_show: Absent,
+
+        // SpaceAPI internal usage
+        cache: Value(spaceapi::Cache {
             schedule: "m.02".to_string(),
-        },
-        state: spaceapi::State {
-            open: false,
-            message: "Open every Monday from 20:00".to_string(),
-        },
-        contact: spaceapi::Contact {
-            irc: "irc://freenode.net/#coredump".to_string(),
-            twitter: "@coredump_ch".to_string(),
-            foursquare: "525c20e5498e875d8231b1e5".to_string(),
-            email: "danilo@coredump.ch".to_string(),
-        },
+        }),
         issue_report_channels: vec![
             "email".to_string(),
             "twitter".to_string(),
         ],
-        feeds: spaceapi::Feeds {
-            blog: spaceapi::Feed {
-                _type: "rss".to_string(),
-                url: "https://www.coredump.ch/feed/".to_string(),
-            },
+
+        // Mutable data
+        state: spaceapi::State {
+            open: Some(false),
+            message: Value("Open every Monday from 20:00".to_string()),
+            lastchange: Absent,
+            trigger_person: Absent,
+            icon: Absent,
         },
-        projects: vec![
-            "https://www.coredump.ch/projekte/".to_string(),
-            "https://discourse.coredump.ch/c/projects".to_string(),
-            "https://github.com/coredump-ch/".to_string(),
-        ],
-        sensors: spaceapi::Sensors {
+        sensors: Value(spaceapi::Sensors {
             people_now_present: people_present_sensor,
             temperature: temperature_sensor,
-        },
+        }),
+
     };
-    json::encode(&status).unwrap()
+    status.to_json().to_string()
 }
 
 fn status_endpoint(_: Request, mut res: Response<Fresh>) {
@@ -157,30 +177,26 @@ mod test {
     /// Verify that the response JSON looks OK.
     fn verify_response_json() {
         let people_present = Some(23);
-        let temperature = Some(42.1337);
+        let temperature = Some(42.5);
         let json = build_response_json(people_present, temperature);
         assert_eq!(json, "{\
             \"api\":\"0.13\",\
-            \"space\":\"coredump\",\
-            \"logo\":\"https://www.coredump.ch/logo.png\",\
-            \"url\":\"https://www.coredump.ch/\",\
+            \"cache\":{\"schedule\":\"m.02\"},\
+            \"contact\":{\
+                \"email\":\"danilo@coredump.ch\",\
+                \"foursquare\":\"525c20e5498e875d8231b1e5\",\
+                \"irc\":\"irc://freenode.net/#coredump\",\
+                \"twitter\":\"@coredump_ch\"\
+            },\
+            \"feeds\":{\
+                \"blog\":{\"type\":\"rss\",\"url\":\"https://www.coredump.ch/feed/\"}\
+            },\
+            \"issue_report_channels\":[\"email\",\"twitter\"],\
             \"location\":{\
                 \"address\":\"Spinnereistrasse 2, 8640 Rapperswil, Switzerland\",\
                 \"lat\":47.22936,\"lon\":8.82949\
             },\
-            \"spacefed\":{\"spacenet\":false,\"spacesaml\":false,\"spacephone\":false},\
-            \"cache\":{\"schedule\":\"m.02\"},\
-            \"state\":{\"open\":false,\"message\":\"Open every Monday from 20:00\"},\
-            \"contact\":{\
-                \"irc\":\"irc://freenode.net/#coredump\",\
-                \"twitter\":\"@coredump_ch\",\
-                \"foursquare\":\"525c20e5498e875d8231b1e5\",\
-                \"email\":\"danilo@coredump.ch\"\
-            },\
-            \"issue_report_channels\":[\"email\",\"twitter\"],\
-            \"feeds\":{\
-                \"blog\":{\"type\":\"rss\",\"url\":\"https://www.coredump.ch/feed/\"}\
-            },\
+            \"logo\":\"https://www.coredump.ch/logo.png\",\
             \"projects\":[\
                 \"https://www.coredump.ch/projekte/\",\
                 \"https://discourse.coredump.ch/c/projects\",\
@@ -188,14 +204,17 @@ mod test {
             ],\
             \"sensors\":{\
                 \"people_now_present\":[{\
-                    \"value\":23,\"location\":\"Hackerspace\",\
-                    \"name\":null,\"description\":null\
+                    \"location\":\"Hackerspace\",\"value\":23\
                 }],\
                 \"temperature\":[{\
-                    \"value\":42.133701,\"unit\":\"°C\",\
-                    \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\"description\":null\
+                    \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\
+                    \"unit\":\"°C\",\"value\":42.5\
                 }]\
-            }\
+            },\
+            \"space\":\"coredump\",\
+            \"spacefed\":{\"spacenet\":false,\"spacephone\":false,\"spacesaml\":false},\
+            \"state\":{\"message\":\"Open every Monday from 20:00\",\"open\":false},\
+            \"url\":\"https://www.coredump.ch/\"\
         }");
     }
 }
