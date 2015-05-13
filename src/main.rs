@@ -177,7 +177,7 @@ mod test {
     /// Verify that the response JSON looks OK.
     fn verify_response_json() {
         let people_present = Some(23);
-        let temperature = Some(42.1337);
+        let temperature = Some(42.5);
         let json = build_response_json(people_present, temperature);
         assert_eq!(json, "{\
             \"api\":\"0.13\",\
@@ -208,7 +208,7 @@ mod test {
                 }],\
                 \"temperature\":[{\
                     \"location\":\"Hackerspace\",\"name\":\"Raspberry CPU\",\
-                    \"unit\":\"°C\",\"value\":42.133701\
+                    \"unit\":\"°C\",\"value\":42.5\
                 }]\
             },\
             \"space\":\"coredump\",\
