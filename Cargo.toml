@@ -1,10 +1,13 @@
 [package]
-name = "status"
+name = "spaceapi"
 version = "0.0.1"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",
     "Danilo Bargen <mail@dbrgn.ch>",
 ]
+repository = "https://github.com/coredump-ch/spaceapi"
+readme = "./README.rst"
+keywords = ["json", "spaceapi"]
 
 [dependencies]
 rustc-serialize = "0.3.14"
