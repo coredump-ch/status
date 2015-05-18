@@ -4,6 +4,10 @@ rust:
   - nightly
 services:
   - redis-server
+env:
+  - CRATE=.
+  - CRATE=spaceapi
+script: cd $CRATE && cargo build --verbose && cargo test --verbose
 notifications:
   irc:
     channels:
