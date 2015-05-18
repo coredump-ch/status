@@ -1,5 +1,8 @@
 extern crate rustc_serialize;
 
+pub mod datastore;
+pub mod redis_store;
+
 use std::collections::BTreeMap;
 
 use rustc_serialize::json::{Json, ToJson};

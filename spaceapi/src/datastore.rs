@@ -1,5 +1,4 @@
-use redis;
-
+extern crate redis;
 
 /// A DataStore needs to implement store and retrieve methods.
 pub trait DataStore {
@@ -11,12 +10,12 @@ pub trait DataStore {
 /// A struct representing a datastore error.
 #[derive(Debug)]
 pub struct DataStoreError {
-    repr: ErrorKind,
+    pub repr: ErrorKind,
 }
 
 /// An enum containing all possible error kinds.
 #[derive(Debug)]
-enum ErrorKind {
+pub enum ErrorKind {
     RedisError(redis::RedisError),
 }
 

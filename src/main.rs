@@ -5,12 +5,9 @@
 
 extern crate rustc_serialize;
 extern crate hyper;
-extern crate redis;
+extern crate spaceapi;
 
 mod utils;
-mod spaceapi;
-mod datastore;
-mod redis_store;
 
 use std::io::Write;
 use std::net::Ipv4Addr;
@@ -22,7 +19,8 @@ use hyper::server::Response;
 use hyper::net::Fresh;
 use hyper::header;
 
-use datastore::DataStore;
+use spaceapi::datastore::DataStore;
+use spaceapi::redis_store::RedisStore;
 use spaceapi::Optional::{Value, Absent};
 
 
@@ -124,7 +122,7 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
 
 fn status_endpoint(_: Request, mut res: Response<Fresh>) {
     // Fetch data from datastore
-    let datastore = redis_store::RedisStore::new().unwrap();
+    let datastore = RedisStore::new().unwrap();
     let people_present: Option<u32> = match datastore.retrieve("people_present") {
         Ok(v) => match v.parse::<u32>() {
             Ok(i) => Some(i),
