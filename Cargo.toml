@@ -15,3 +15,6 @@ hyper = "0.3"
 
 [dependencies.spaceapi]
 path = "spaceapi"
+
+[dependencies.spaceapi_server]
+path = "spaceapi_server"
