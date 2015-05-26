@@ -1,5 +1,8 @@
 extern crate rustc_serialize;
 
+pub mod datastore;
+pub mod redis_store;
+
 use std::collections::BTreeMap;
 
 use rustc_serialize::json::{Json, ToJson};
@@ -122,6 +125,41 @@ pub struct Status {
     // Mutable data
     pub state: State,
     pub sensors: Optional<Sensors>,
+
+}
+
+impl Status {
+
+    /// Create a new Status object with only the minimum amount of fields
+    pub fn new(space: String, logo: String, url: String, location: Location, contact: Contact, issue_report_channels: Vec<String>) -> Status {
+        Status {
+            api: "0.13".to_string(),
+            space: space,
+            logo: logo,
+            url: url,
+            location: location,
+            contact: contact,
+
+            spacefed: Optional::Absent,
+            projects: Optional::Absent,
+            cam: Optional::Absent,
+            feeds: Optional::Absent,
+            events: Optional::Absent,
+            radio_show: Optional::Absent,
+
+            cache: Optional::Absent,
+            issue_report_channels: issue_report_channels,
+
+            state: State {
+                open: None,
+                lastchange: Optional::Absent,
+                trigger_person: Optional::Absent,
+                message: Optional::Absent,
+                icon: Optional::Absent,
+            },
+            sensors: Optional::Absent,
+        }
+    }
 
 }
 

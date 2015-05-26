@@ -1,5 +1,5 @@
 [package]
-name = "spaceapi"
+name = "coredump-status"
 version = "0.0.1"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",
@@ -10,6 +10,11 @@ readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 
 [dependencies]
-rustc-serialize = "0.3.14"
-hyper = "0.3.16"
-redis = "0.3.1"
+rustc-serialize = "0.3"
+hyper = "0.3"
+
+[dependencies.spaceapi]
+path = "spaceapi"
+
+[dependencies.spaceapi_server]
+path = "spaceapi_server"

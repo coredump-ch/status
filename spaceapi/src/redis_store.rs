@@ -1,8 +1,8 @@
-use redis::Client;
-use redis::Commands;
+extern crate redis;
 
-use datastore::DataStore;
-use datastore::DataStoreError;
+use self::redis::{Client, Commands};
+
+use datastore::{DataStore, DataStoreError};
 
 
 /// A data store for Redis.
