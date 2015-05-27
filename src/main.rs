@@ -9,6 +9,7 @@ extern crate spaceapi_server;
 use std::net::Ipv4Addr;
 use spaceapi::{Status, Location, Contact, Optional};
 use spaceapi_server::SpaceapiServer;
+use spaceapi_server::datastore;
 
 
 fn main() {
@@ -36,6 +37,7 @@ fn main() {
         ],
     );
 
-    let server = SpaceapiServer::new(host, status);
+    let datastore = datastore::RedisStore::new().unwrap();
+    let server = SpaceapiServer::new(host, status, datastore);
     server.serve();
 }
