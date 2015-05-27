@@ -17,8 +17,7 @@ use iron::{Chain, Request, Response, IronResult, IronError, Iron, Set};
 use iron::{status, headers, middleware};
 use iron::modifiers::Header;
 
-use spaceapi::datastore::DataStore;
-use spaceapi::redis_store::RedisStore;
+pub use spaceapi::datastore;
 use spaceapi::Optional::{Value, Absent};
 
 
@@ -123,15 +122,17 @@ pub struct SpaceapiServer {
     host: Ipv4Addr,
     port: u16,
     status: spaceapi::Status,
+    datastore: datastore::DataStore,
 }
 
 impl SpaceapiServer {
 
-    pub fn new(host: Ipv4Addr, status: spaceapi::Status) -> SpaceapiServer {
+    pub fn new(host: Ipv4Addr, status: spaceapi::Status, datastore: datastore::DataStore) -> SpaceapiServer {
         SpaceapiServer {
             host: host,
             port: utils::get_port(),
             status: status,
+            datastore: datastore,
         }
     }
 
@@ -149,15 +150,14 @@ impl middleware::Handler for SpaceapiServer {
     fn handle(&self, _: &mut Request) -> IronResult<Response> {
 
         // Fetch data from datastore
-        let datastore = RedisStore::new().unwrap();
-        let people_present: Option<u32> = match datastore.retrieve("people_present") {
+        let people_present: Option<u32> = match self.datastore.retrieve("people_present") {
             Ok(v) => match v.parse::<u32>() {
                 Ok(i) => Some(i),
                 Err(_) => None,
             },
             Err(_) => None,
         };
-        let raspi_temperature: Option<f32> = match datastore.retrieve("raspi_temperature") {
+        let raspi_temperature: Option<f32> = match self.datastore.retrieve("raspi_temperature") {
             Ok(v) => match v.parse::<f32>() {
                 Ok(i) => Some(i),
                 Err(_) => None,
