@@ -3,8 +3,6 @@
 //! Running this code starts a HTTP server instance. The default port is 3000, but you can set your
 //! own favorite port by exporting the `PORT` environment variable.
 
-#![feature(box_syntax)]
-
 extern crate spaceapi;
 extern crate spaceapi_server;
 
@@ -42,7 +40,7 @@ fn main() {
         ],
     );
 
-    let datastore = Arc::new(Mutex::new( box RedisStore::new().unwrap() as Box<DataStore> ));
+    let datastore = Arc::new(Mutex::new( Box::new( RedisStore::new().unwrap()) as Box<DataStore> ));
     let server = SpaceapiServer::new(host, status, datastore);
     server.serve();
 }
