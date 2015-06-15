@@ -3,12 +3,18 @@
 //! Running this code starts a HTTP server instance. The default port is 3000, but you can set your
 //! own favorite port by exporting the `PORT` environment variable.
 
+#![feature(box_syntax)]
+
 extern crate spaceapi;
 extern crate spaceapi_server;
+
+use std::sync::{Mutex,Arc};
 
 use std::net::Ipv4Addr;
 use spaceapi::{Status, Location, Contact, Optional};
 use spaceapi_server::SpaceapiServer;
+use spaceapi_server::datastore::DataStore;
+use spaceapi_server::redis_store::RedisStore;
 
 
 fn main() {
@@ -36,6 +42,7 @@ fn main() {
         ],
     );
 
-    let server = SpaceapiServer::new(host, status);
+    let datastore = Arc::new(Mutex::new( box RedisStore::new().unwrap() as Box<DataStore> ));
+    let server = SpaceapiServer::new(host, status, datastore);
     server.serve();
 }
