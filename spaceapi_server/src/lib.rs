@@ -5,6 +5,7 @@
 
 extern crate rustc_serialize;
 extern crate iron;
+extern crate router;
 extern crate spaceapi;
 
 pub mod datastore;
@@ -16,6 +17,7 @@ use rustc_serialize::json::{Json, ToJson};
 use iron::{Request, Response, IronResult, Iron, Set};
 use iron::{status, headers, middleware};
 use iron::modifiers::Header;
+use router::Router;
 
 pub use spaceapi as api;
 use datastore::SafeDataStore;
@@ -56,8 +58,10 @@ impl SpaceapiServer {
     pub fn serve(self) {
         let host = self.host;
         let port = self.port;
+        let mut router = Router::new();
+        router.get("/", self);
         println!("Starting HTTP server on http://{}:{}...", host, port);
-        Iron::new(self).http((host, port)).unwrap();
+        Iron::new(router).http((host, port)).unwrap();
     }
 
     /// Register a new sensor.
