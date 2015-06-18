@@ -1,3 +1,5 @@
+.. image:: https://travis-ci.org/coredump-ch/spaceapi.svg?branch=rust
+    :target: https://travis-ci.org/coredump-ch/spaceapi
 Rust Space API Implementation
 =============================
 
