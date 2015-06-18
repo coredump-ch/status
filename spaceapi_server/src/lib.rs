@@ -8,18 +8,19 @@ extern crate iron;
 extern crate spaceapi;
 
 mod utils;
-mod datastore;
-mod redis_store;
+pub mod datastore;
+pub mod redis_store;
 
 use std::net::Ipv4Addr;
+use std::sync::Mutex;
+use std::sync::Arc;
 
 use rustc_serialize::json::ToJson;
 use iron::{Request, Response, IronResult, Iron, Set};
-use iron::{status, headers};
+use iron::{status, headers, middleware};
 use iron::modifiers::Header;
 
-use self::datastore::DataStore;
-use self::redis_store::RedisStore;
+pub use datastore::DataStore;
 use spaceapi::Optional::{Value, Absent};
 
 
@@ -119,61 +120,72 @@ fn build_response_json(people_present: Option<u32>, raspi_temperature: Option<f3
     status.to_json().to_string()
 }
 
-fn status_endpoint(_: &mut Request) -> IronResult<Response> {
-    // Fetch data from datastore
-    let datastore = RedisStore::new().unwrap();
-    let people_present: Option<u32> = match datastore.retrieve("people_present") {
-        Ok(v) => match v.parse::<u32>() {
-            Ok(i) => Some(i),
-            Err(_) => None,
-        },
-        Err(_) => None,
-    };
-    let raspi_temperature: Option<f32> = match datastore.retrieve("raspi_temperature") {
-        Ok(v) => match v.parse::<f32>() {
-            Ok(i) => Some(i),
-            Err(_) => None,
-        },
-        Err(_) => None,
-    };
-
-    // Get response body
-    let body = build_response_json(people_present, raspi_temperature);
-
-    // Create response
-    let mut response = Response::with((status::Ok, body));
-
-    // Set headers
-    response.set_mut(Header(headers::ContentType("application/json; charset=utf-8".parse().unwrap())));
-    response.set_mut(Header(headers::CacheControl(vec![headers::CacheDirective::NoCache])));
-    response.set_mut(Header(headers::AccessControlAllowOrigin::Any));
-
-    Ok(response)
-}
 
 
 pub struct SpaceapiServer {
     host: Ipv4Addr,
     port: u16,
     status: spaceapi::Status,
+    datastore: Arc<Mutex<Box<DataStore>>>,
 }
 
 impl SpaceapiServer {
 
-    pub fn new(host: Ipv4Addr, status: spaceapi::Status) -> SpaceapiServer {
+    pub fn new(host: Ipv4Addr, status: spaceapi::Status, datastore: Arc<Mutex<Box<DataStore>>>) -> SpaceapiServer{
         SpaceapiServer {
             host: host,
             port: utils::get_port(),
             status: status,
+            datastore: datastore,
         }
     }
 
-    pub fn serve(&self) {
-        println!("Starting HTTP server on {}:{}...", self.host, self.port);
-        Iron::new(status_endpoint).http((self.host, self.port)).unwrap();
+    pub fn serve(self) {
+        let host = self.host;
+        let port = self.port;
+        println!("Starting HTTP server on {}:{}...", host, port);
+        Iron::new(self).http((host, port)).unwrap();
     }
 
 }
+
+impl middleware::Handler for SpaceapiServer {
+
+    fn handle(&self, _: &mut Request) -> IronResult<Response> {
+
+        // Fetch data from datastore
+        let datastore_clone= self.datastore.clone();
+        let datastore_lock = datastore_clone.lock().unwrap();
+        let people_present: Option<u32> = match datastore_lock.retrieve("people_present") {
+            Ok(v) => match v.parse::<u32>() {
+                Ok(i) => Some(i),
+                Err(_) => None,
+            },
+            Err(_) => None,
+        };
+        let raspi_temperature: Option<f32> = match datastore_lock.retrieve("raspi_temperature") {
+            Ok(v) => match v.parse::<f32>() {
+                Ok(i) => Some(i),
+                Err(_) => None,
+            },
+            Err(_) => None,
+        };
+
+        // Get response body
+        let body = build_response_json(people_present, raspi_temperature);
+
+        // Create response
+        let mut response = Response::with((status::Ok, body));
+
+        // Set headers
+        response.set_mut(Header(headers::ContentType("application/json; charset=utf-8".parse().unwrap())));
+        response.set_mut(Header(headers::CacheControl(vec![headers::CacheDirective::NoCache])));
+        response.set_mut(Header(headers::AccessControlAllowOrigin::Any));
+
+        Ok(response)
+    }
+}
+
 
 #[cfg(test)]
 mod test {

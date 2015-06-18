@@ -6,9 +6,13 @@
 extern crate spaceapi;
 extern crate spaceapi_server;
 
+use std::sync::{Mutex,Arc};
+
 use std::net::Ipv4Addr;
 use spaceapi::{Status, Location, Contact, Optional};
 use spaceapi_server::SpaceapiServer;
+use spaceapi_server::datastore::DataStore;
+use spaceapi_server::redis_store::RedisStore;
 
 
 fn main() {
@@ -36,6 +40,7 @@ fn main() {
         ],
     );
 
-    let server = SpaceapiServer::new(host, status);
+    let datastore = Arc::new(Mutex::new( Box::new( RedisStore::new().unwrap()) as Box<DataStore> ));
+    let server = SpaceapiServer::new(host, status, datastore);
     server.serve();
 }
