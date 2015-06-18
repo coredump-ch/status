@@ -9,10 +9,6 @@ repository = "https://github.com/coredump-ch/spaceapi"
 readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 
-[dependencies]
-rustc-serialize = "0.3"
-hyper = "0.3"
-
 [dependencies.spaceapi]
 path = "spaceapi"
 
