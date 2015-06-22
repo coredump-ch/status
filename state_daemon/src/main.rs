@@ -5,6 +5,8 @@ extern crate rustc_serialize;
 
 use rustc_serialize::json::{self, DecoderError};
 use hyper::Client;
+use std::io;
+use std::io::Read;
 
 #[derive(RustcDecodable)]
 struct SwitchStatus {
@@ -26,10 +28,18 @@ fn update_people_temp_raspi(host: &str, people: u8, temp_raspi: f64) {
     }
 }
 
-/// \todo get people_present from switches inside coredump
-fn get_people_present() -> Result<u8, DecoderError> {
-    // get presence counter port 1337
-    json::decode::<SwitchStatus>("{\"open\": true, \"people\": 2}")
+#[derive(Debug)]
+enum PeoplePresentError {
+    Io(io::Error),
+    Decoder(DecoderError)
+}
+
+fn get_people_present(host: &str) -> Result<u8, PeoplePresentError> {
+    let mut client = Client::new();
+    let mut json = String::new();
+    try!(client.get(host).send().unwrap().read_to_string(&mut json)
+         .map_err(PeoplePresentError::Io));
+    json::decode::<SwitchStatus>(&json).map_err(PeoplePresentError::Decoder)
         .map(|status| status.people)
 }
 
@@ -41,8 +51,9 @@ fn get_raspi_temp() -> Option<f64> {
 fn main() {
     loop {
         update_people_temp_raspi(
-            "http://localhost:8080/update",
-            get_people_present().unwrap(),
+            //"http://localhost:8080/update",
+            "http://status.coredump.ch/update",
+            get_people_present("http://10.0.0.100:1337").unwrap(),
             get_raspi_temp().unwrap()
             );
         std::thread::sleep_ms(1000);
