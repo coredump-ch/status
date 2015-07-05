@@ -19,13 +19,11 @@ fn update_people_temp_raspi(host: &str, people: u8, temp_raspi: f64) {
 
     let values =format!("people={}&temp_raspi={}", people, temp_raspi);
 
-    let res = client.post(host)
+    client.post(host)
         .body(&values)
-        .send();
-    match res {
-        Ok(res)  => println!("Response: {}", res.status),
-        Err(e) => println!("Err: {:?}", e)
-    }
+        .send()
+        .map_err(|err| println!("Err: {:?}", err))
+        .map(|res| println!("Response: {}", res.status))
 }
 
 #[derive(Debug)]
@@ -39,7 +37,8 @@ fn get_people_present(host: &str) -> Result<u8, PeoplePresentError> {
     let mut json = String::new();
     try!(client.get(host).send().unwrap().read_to_string(&mut json)
          .map_err(PeoplePresentError::Io));
-    json::decode::<SwitchStatus>(&json).map_err(PeoplePresentError::Decoder)
+    json::decode::<SwitchStatus>(&json)
+        .map_err(PeoplePresentError::Decoder)
         .map(|status| status.people)
 }
 
