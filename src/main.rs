@@ -14,7 +14,7 @@ use spaceapi_server::SpaceapiServer;
 use spaceapi_server::datastore::DataStore;
 use spaceapi_server::redis_store::RedisStore;
 
-
+#[cfg_attr(test, allow(dead_code))]
 fn main() {
     let host = Ipv4Addr::new(127, 0, 0, 1);
 
