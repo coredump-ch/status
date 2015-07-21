@@ -1,5 +1,5 @@
 [package]
-name = "coredump-status"
+name = "coredump_status"
 version = "0.0.1"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",

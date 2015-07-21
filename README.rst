@@ -46,3 +46,9 @@ We currently store data in the following two redis keys:
 
 - people_present (integer)
 - raspi_temperature (float)
+
+Docs
+----
+
+You can build docs with ``make docs``. Find them in the ``target/doc/``
+directory.

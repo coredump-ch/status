@@ -1,7 +1,8 @@
-//! The main entry point for the SpaceAPi server.
+//! Coredump implementation of the Space API server.
 //!
-//! Running this code starts a HTTP server instance. The default port is 3000, but you can set your
-//! own favorite port by exporting the `PORT` environment variable.
+//! Start this via the commandline:
+//!
+//!     ./coredump_status [-p PORT] [-i IP]
 
 extern crate docopt;
 extern crate rustc_serialize;
@@ -20,7 +21,7 @@ use utils::Ipv4;
 
 
 static USAGE: &'static str = "
-Usage: coredump-status [-p PORT] [-i IP]
+Usage: coredump_status [-p PORT] [-i IP]
 
 Options:
     -p PORT  The port to listen on [default: 3000].
