@@ -3,20 +3,43 @@
 //! Running this code starts a HTTP server instance. The default port is 3000, but you can set your
 //! own favorite port by exporting the `PORT` environment variable.
 
+extern crate docopt;
+extern crate rustc_serialize;
 extern crate spaceapi;
 extern crate spaceapi_server;
 
-use std::sync::{Mutex,Arc};
+mod utils;
 
-use std::net::Ipv4Addr;
+use std::sync::{Mutex,Arc};
+use docopt::Docopt;
 use spaceapi::{Status, Location, Contact, Optional};
 use spaceapi_server::SpaceapiServer;
 use spaceapi_server::datastore::DataStore;
 use spaceapi_server::redis_store::RedisStore;
+use utils::Ipv4;
+
+
+static USAGE: &'static str = "
+Usage: coredump-status [-p PORT] [-i IP]
+
+Options:
+    -p PORT  The port to listen on [default: 3000].
+    -i IP    The ipv4 address to listen on [default: 127.0.0.1].
+";
+
+#[derive(RustcDecodable, Debug)]
+struct Args {
+    flag_p: u16,
+    flag_i: Ipv4,
+}
 
 
 fn main() {
-    let host = Ipv4Addr::new(127, 0, 0, 1);
+    // Parse arguments
+    let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
+                                       .unwrap_or_else(|e| e.exit());
+    let host = args.flag_i.ip;
+    let port = args.flag_p;
 
     // TODO: Create variables for all params
     let status = Status::new(
@@ -41,6 +64,6 @@ fn main() {
     );
 
     let datastore = Arc::new(Mutex::new( Box::new( RedisStore::new().unwrap()) as Box<DataStore> ));
-    let server = SpaceapiServer::new(host, status, datastore);
+    let server = SpaceapiServer::new(host, port, status, datastore);
     server.serve();
 }

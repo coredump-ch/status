@@ -14,3 +14,7 @@ path = "spaceapi"
 
 [dependencies.spaceapi_server]
 path = "spaceapi_server"
+
+[dependencies]
+docopt = "*"
+rustc-serialize = "*"
