@@ -34,7 +34,7 @@ struct Args {
     flag_i: Ipv4,
 }
 
-
+#[cfg_attr(test, allow(dead_code))]
 fn main() {
     // Parse arguments
     let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
