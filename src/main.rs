@@ -15,7 +15,7 @@ use std::sync::{Mutex,Arc};
 use docopt::Docopt;
 use spaceapi::{Status, Location, Contact, Optional};
 use spaceapi::SensorTemplate::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
-use spaceapi_server::SpaceapiServer;
+use spaceapi_server::{SpaceapiServer, SensorValueType};
 use spaceapi_server::datastore::DataStore;
 use spaceapi_server::redis_store::RedisStore;
 use utils::Ipv4;
@@ -66,7 +66,7 @@ fn main() {
     );
 
     // Set up datastore
-    let datastore = Arc::new(Mutex::new( Box::new( RedisStore::new().unwrap()) as Box<DataStore> ));
+    let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
 
     // Set up server
     let mut server = SpaceapiServer::new(host, port, status, datastore);
@@ -77,13 +77,13 @@ fn main() {
         location: "Hackerspace".to_string(),
         name: Optional::Value("Raspberry CPU".to_string()),
         description: Optional::Absent,
-    }, "raspi_temperature".to_string());
+    }, "raspi_temperature".to_string(), SensorValueType::Float);
     server.register_sensor(PeopleNowPresentSensorTemplate {
         location: Optional::Value("Hackerspace".to_string()),
         name: Optional::Absent,
         description: Optional::Absent,
         names: Optional::Absent,
-    }, "people_present".to_string());
+    }, "people_present".to_string(), SensorValueType::Int);
 
     // Serve!
     server.serve();
