@@ -47,6 +47,23 @@ We currently store data in the following two redis keys:
 - people_present (integer)
 - raspi_temperature (float)
 
+Docker Image
+------------
+
+To build the docker image (which pulls ``master`` version from Github, not the
+local codebase)::
+
+    $ docker build -t coredump/spaceapi .
+
+To run a new container from the image::
+
+    $ PORT=3000
+    $ docker run -d -p 127.0.0.1:$PORT:3000 coredump/spaceapi
+
+To stop it again::
+
+    docker stop <container-id>
+
 Docs
 ----
 
