@@ -13,7 +13,8 @@ mod utils;
 
 use std::sync::{Mutex,Arc};
 use docopt::Docopt;
-use spaceapi::{Status, Location, Contact, Optional};
+use spaceapi::{Status, Location, Contact};
+use spaceapi::utils::Optional;
 use spaceapi::SensorTemplate::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
 use spaceapi_server::{SpaceapiServer, SensorValueType};
 use spaceapi_server::datastore::DataStore;
