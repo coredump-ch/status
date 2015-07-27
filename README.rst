@@ -21,7 +21,7 @@ Then one can start the spaci api server::
 
 You can also specify a different ip or port::
 
-    $ cargo run -i 0.0.0.0 -p 1337
+    $ cargo run -- -i 0.0.0.0 -p 1337
 
 To use the redis storage start the redis server::
     
