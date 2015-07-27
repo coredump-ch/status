@@ -5,6 +5,7 @@
 
 extern crate rustc_serialize;
 extern crate iron;
+extern crate urlencoded;
 extern crate spaceapi;
 
 pub mod datastore;
@@ -15,9 +16,10 @@ use std::sync::Mutex;
 use std::sync::Arc;
 
 use rustc_serialize::json::{Json, ToJson};
-use iron::{Request, Response, IronResult, Iron, Set};
+use iron::prelude::*;
 use iron::{status, headers, middleware};
 use iron::modifiers::Header;
+use urlencoded::UrlEncodedQuery;
 
 pub use datastore::DataStore;
 use spaceapi::Optional::{Value, Absent};
@@ -87,6 +89,21 @@ impl SpaceapiServer {
         }
     }
 
+    fn update_values(&self, map: &urlencoded::QueryMap) -> IronResult<Response> {
+        // store data to datastore
+        let datastore_clone = self.datastore.clone();
+        let datastore_lock = datastore_clone.lock().unwrap();
+        println!("{:?}", map);
+
+        for item in map.iter() {
+            // TODO: check if key exists and handle errors
+            datastore_lock.store(item.0, &item.1[0]);
+        }
+        let response = Response::with((status::Ok, "updated values"));
+        Ok(response)
+    }
+
+
     pub fn serve(self) {
         let host = self.host;
         let port = self.port;
@@ -98,11 +115,17 @@ impl SpaceapiServer {
 
 impl middleware::Handler for SpaceapiServer {
 
-    fn handle(&self, _: &mut Request) -> IronResult<Response> {
+    fn handle(&self, req: &mut Request) -> IronResult<Response> {
+
+        match req.get_ref::<UrlEncodedQuery>() {
+            Ok(ref hashmap) => return self.update_values(hashmap),
+            Err(ref e) => println!("{:?}", e)
+        };
 
         // Fetch data from datastore
         let datastore_clone = self.datastore.clone();
         let datastore_lock = datastore_clone.lock().unwrap();
+
         let people_present: Option<u32> = match datastore_lock.retrieve("people_present") {
             Ok(v) => match v.parse::<u32>() {
                 Ok(i) => Some(i),
