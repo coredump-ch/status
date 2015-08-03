@@ -18,7 +18,7 @@ use spaceapi::utils::Optional;
 use spaceapi::SensorTemplate::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
 use spaceapi_server::{SpaceapiServer, SensorValueType};
 use spaceapi_server::datastore::DataStore;
-use spaceapi_server::redis_store::RedisStore;
+use spaceapi_server::redisstore::RedisStore;
 use utils::Ipv4;
 
 
