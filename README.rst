@@ -53,11 +53,11 @@ Docker Image
 To build the docker image (which pulls ``master`` version from Github, not the
 local codebase)::
 
-    $ docker build -t coredump/spaceapi .
+    $ docker build -t coredump/spaceapi:latest .
 
 To run a new container from the image::
 
-    $ PORT=3000
+    $ export PORT=3000
     $ docker run -d -p 127.0.0.1:$PORT:3000 coredump/spaceapi
 
 To stop it again::
