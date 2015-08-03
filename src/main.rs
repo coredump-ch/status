@@ -15,6 +15,7 @@ use docopt::Docopt;
 use spaceapi_server::SpaceapiServer;
 use spaceapi_server::api;
 use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
+use spaceapi_server::api::Optional::{Value, Absent};
 use spaceapi_server::datastore::{DataStore, RedisStore};
 use utils::Ipv4;
 
@@ -43,27 +44,48 @@ fn main() {
     let host = args.flag_i.ip;
     let port = args.flag_p;
 
-    // TODO: Create variables for all params
-    let status = api::Status::new(
+    // Create new Status instance
+    let mut status = api::Status::new(
         "coredump".to_string(),
         "https://www.coredump.ch/logo.png".to_string(),
         "https://www.coredump.ch/".to_string(),
         api::Location {
-            address: api::Optional::Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
+            address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
             lat: 47.22936,
             lon: 8.82949,
         },
         api::Contact {
-            irc: api::Optional::Value("irc://freenode.net/#coredump".to_string()),
-            twitter: api::Optional::Value("@coredump_ch".to_string()),
-            foursquare: api::Optional::Value("525c20e5498e875d8231b1e5".to_string()),
-            email: api::Optional::Value("danilo@coredump.ch".to_string()),
+            irc: Value("irc://freenode.net/#coredump".to_string()),
+            twitter: Value("@coredump_ch".to_string()),
+            foursquare: Value("525c20e5498e875d8231b1e5".to_string()),
+            email: Value("danilo@coredump.ch".to_string()),
         },
         vec![
             "email".to_string(),
             "twitter".to_string(),
         ],
     );
+
+    // Add optional data
+    status.spacefed = Value(api::Spacefed {
+        spacenet: false,
+        spacesaml: false,
+        spacephone: false,
+    });
+    status.feeds = Value(api::Feeds {
+        blog: Value(api::Feed {
+            _type: Value("rss".to_string()),
+            url: "https://www.coredump.ch/feed/".to_string(),
+        }),
+        wiki: Absent,
+        calendar: Absent,
+        flickr: Absent,
+    });
+    status.projects = Value(vec![
+        "https://www.coredump.ch/projekte/".to_string(),
+        "https://discourse.coredump.ch/c/projects".to_string(),
+        "https://github.com/coredump-ch/".to_string(),
+    ]);
 
     // Set up datastore
     let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
@@ -75,14 +97,14 @@ fn main() {
     server.register_sensor(Box::new(TemperatureSensorTemplate {
         unit: "°C".to_string(),
         location: "Hackerspace".to_string(),
-        name: api::Optional::Value("Raspberry CPU".to_string()),
-        description: api::Optional::Absent,
+        name: Value("Raspberry CPU".to_string()),
+        description: Absent,
     }), "raspi_temperature".to_string());
     server.register_sensor(Box::new(PeopleNowPresentSensorTemplate {
-        location: api::Optional::Value("Hackerspace".to_string()),
-        name: api::Optional::Absent,
-        description: api::Optional::Absent,
-        names: api::Optional::Absent,
+        location: Value("Hackerspace".to_string()),
+        name: Absent,
+        description: Absent,
+        names: Absent,
     }), "people_present".to_string());
 
     // Serve!
