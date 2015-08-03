@@ -202,7 +202,7 @@ mod test {
         );
 
         // Create datastore (TODO: Create dummy store for testing?)
-        let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
+        let datastore = RedisStore::new().unwrap().make_safe();
 
         // Initialize server
         let server = SpaceapiServer::new(Ipv4Addr::new(127, 0, 0, 1), 3001, status, datastore);
