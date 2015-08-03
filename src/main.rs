@@ -6,19 +6,17 @@
 
 extern crate docopt;
 extern crate rustc_serialize;
-extern crate spaceapi;
 extern crate spaceapi_server;
 
 mod utils;
 
 use std::sync::{Mutex,Arc};
 use docopt::Docopt;
-use spaceapi::{Status, Location, Contact};
-use spaceapi::utils::Optional;
-use spaceapi::SensorTemplate::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
-use spaceapi_server::{SpaceapiServer, SensorValueType};
-use spaceapi_server::datastore::DataStore;
-use spaceapi_server::redisstore::RedisStore;
+use spaceapi_server::SpaceapiServer;
+use spaceapi_server::api;
+use spaceapi_server::api::SensorTemplate::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
+use spaceapi_server::sensors::SensorValueType;
+use spaceapi_server::datastore::{DataStore, RedisStore};
 use utils::Ipv4;
 
 
@@ -45,20 +43,20 @@ fn main() {
     let port = args.flag_p;
 
     // TODO: Create variables for all params
-    let status = Status::new(
+    let status = api::Status::new(
         "coredump".to_string(),
         "https://www.coredump.ch/logo.png".to_string(),
         "https://www.coredump.ch/".to_string(),
-        Location {
-            address: Optional::Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
+        api::Location {
+            address: api::Optional::Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
             lat: 47.22936,
             lon: 8.82949,
         },
-        Contact {
-            irc: Optional::Value("irc://freenode.net/#coredump".to_string()),
-            twitter: Optional::Value("@coredump_ch".to_string()),
-            foursquare: Optional::Value("525c20e5498e875d8231b1e5".to_string()),
-            email: Optional::Value("danilo@coredump.ch".to_string()),
+        api::Contact {
+            irc: api::Optional::Value("irc://freenode.net/#coredump".to_string()),
+            twitter: api::Optional::Value("@coredump_ch".to_string()),
+            foursquare: api::Optional::Value("525c20e5498e875d8231b1e5".to_string()),
+            email: api::Optional::Value("danilo@coredump.ch".to_string()),
         },
         vec![
             "email".to_string(),
@@ -76,14 +74,14 @@ fn main() {
     server.register_sensor(TemperatureSensorTemplate {
         unit: "°C".to_string(),
         location: "Hackerspace".to_string(),
-        name: Optional::Value("Raspberry CPU".to_string()),
-        description: Optional::Absent,
+        name: api::Optional::Value("Raspberry CPU".to_string()),
+        description: api::Optional::Absent,
     }, "raspi_temperature".to_string(), SensorValueType::Float);
     server.register_sensor(PeopleNowPresentSensorTemplate {
-        location: Optional::Value("Hackerspace".to_string()),
-        name: Optional::Absent,
-        description: Optional::Absent,
-        names: Optional::Absent,
+        location: api::Optional::Value("Hackerspace".to_string()),
+        name: api::Optional::Absent,
+        description: api::Optional::Absent,
+        names: api::Optional::Absent,
     }, "people_present".to_string(), SensorValueType::Int);
 
     // Serve!
