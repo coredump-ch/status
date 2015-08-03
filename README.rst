@@ -24,14 +24,14 @@ You can also specify a different ip or port::
     $ cargo run -- -i 0.0.0.0 -p 1337
 
 To use the redis storage start the redis server::
-    
+
     $ redis-server
 
 (...or start it using your favorite init daemon.)
 
 You can access the database with the ``redis-cli`` tool::
 
-    % redis-cli 
+    % redis-cli
     127.0.0.1:6379> SET people_present 1
     OK
     127.0.0.1:6379> GET people_present
