@@ -3,7 +3,7 @@
 //! Start this via the commandline:
 //!
 //!     ./coredump_status [-p PORT] [-i IP]
-
+extern crate env_logger;
 extern crate docopt;
 extern crate rustc_serialize;
 extern crate spaceapi_server;
@@ -35,6 +35,8 @@ struct Args {
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
+    env_logger::init().unwrap();
+
     // Parse arguments
     let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
                                        .unwrap_or_else(|e| e.exit());
