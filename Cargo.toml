@@ -18,3 +18,4 @@ path = "spaceapi_server"
 [dependencies]
 docopt = "*"
 rustc-serialize = "*"
+env_logger = "*"

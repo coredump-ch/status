@@ -3,7 +3,7 @@
 //! Start this via the commandline:
 //!
 //!     ./coredump_status [-p PORT] [-i IP]
-
+extern crate env_logger;
 extern crate docopt;
 extern crate rustc_serialize;
 extern crate spaceapi_server;
@@ -14,8 +14,7 @@ use std::sync::{Mutex,Arc};
 use docopt::Docopt;
 use spaceapi_server::SpaceapiServer;
 use spaceapi_server::api;
-use spaceapi_server::api::SensorTemplate::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
-use spaceapi_server::sensors::SensorValueType;
+use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
 use spaceapi_server::datastore::{DataStore, RedisStore};
 use utils::Ipv4;
 
@@ -36,6 +35,8 @@ struct Args {
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
+    env_logger::init().unwrap();
+
     // Parse arguments
     let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
                                        .unwrap_or_else(|e| e.exit());
@@ -71,18 +72,18 @@ fn main() {
     let mut server = SpaceapiServer::new(host, port, status, datastore);
 
     // Register sensors
-    server.register_sensor(TemperatureSensorTemplate {
+    server.register_sensor(Box::new(TemperatureSensorTemplate {
         unit: "°C".to_string(),
         location: "Hackerspace".to_string(),
         name: api::Optional::Value("Raspberry CPU".to_string()),
         description: api::Optional::Absent,
-    }, "raspi_temperature".to_string(), SensorValueType::Float);
-    server.register_sensor(PeopleNowPresentSensorTemplate {
+    }), "raspi_temperature".to_string());
+    server.register_sensor(Box::new(PeopleNowPresentSensorTemplate {
         location: api::Optional::Value("Hackerspace".to_string()),
         name: api::Optional::Absent,
         description: api::Optional::Absent,
         names: api::Optional::Absent,
-    }, "people_present".to_string(), SensorValueType::Int);
+    }), "people_present".to_string());
 
     // Serve!
     server.serve();

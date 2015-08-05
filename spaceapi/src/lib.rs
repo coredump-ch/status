@@ -44,10 +44,12 @@
 //!     let stringstatus = jsonstatus.to_string();
 //!     # }
 
+#[macro_use]
+extern crate log;
 extern crate rustc_serialize;
 
 pub mod utils;
-mod sensors;
+pub mod sensors;
 mod status;
 pub use status::*;
 

@@ -7,21 +7,75 @@ use utils::Optional;
 
 //--- Templates ---//
 
-/// An enum of all possible sensor templates.
+/// A trait for all possible sensor templates.
+/// the `SensorTemplate`s are capable of registering themselves in a `Sensors` struct
+pub trait SensorTemplate : Send+Sync {
+    fn to_sensor(&self, value_str: &str, sensors: &mut Sensors);
+}
+
 #[derive(Debug, Clone)]
-pub enum SensorTemplate {
-    PeopleNowPresentSensorTemplate {
-        location: Optional<String>,
-        name: Optional<String>,
-        names: Optional<Vec<String>>,
-        description: Optional<String>,
-    },
-    TemperatureSensorTemplate {
-        unit: String,
-        location: String,
-        name: Optional<String>,
-        description: Optional<String>,
-    },
+pub struct PeopleNowPresentSensorTemplate {
+    pub location: Optional<String>,
+    pub name: Optional<String>,
+    pub names: Optional<Vec<String>>,
+    pub description: Optional<String>,
+}
+
+impl SensorTemplate for PeopleNowPresentSensorTemplate {
+    fn to_sensor(&self, value_str: &str, sensors: &mut Sensors) {
+        if value_str.parse::<i64>().map(|value|{
+            let sensor = PeopleNowPresentSensor {
+                location: self.location.clone(),
+                name: self.name.clone(),
+                names: self.names.clone(),
+                description: self.description.clone(),
+                value: value,
+            };
+
+            match sensors.people_now_present {
+                Optional::Value(ref mut vec_sensors) => {
+                    vec_sensors.push(sensor)
+                }
+                Optional::Absent => {
+                    sensors.people_now_present = Optional::Value(vec![sensor])
+                }
+            }
+        }).is_err() {
+            warn!("Could not parse '{}': omiting the sensor", value_str);
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct TemperatureSensorTemplate {
+    pub unit: String,
+    pub location: String,
+    pub name: Optional<String>,
+    pub description: Optional<String>,
+}
+
+impl SensorTemplate for TemperatureSensorTemplate {
+    fn to_sensor(&self, value_str: &str, sensors: &mut Sensors) {
+        if value_str.parse::<f64>().map(|value|{
+            let sensor = TemperatureSensor {
+                unit: self.unit.clone(),
+                location: self.location.clone(),
+                name: self.name.clone(),
+                description: self.description.clone(),
+                value: value,
+            };
+            match sensors.temperature {
+                Optional::Value(ref mut vec_sensors) => {
+                    vec_sensors.push(sensor)
+                }
+                Optional::Absent => {
+                    sensors.temperature = Optional::Value(vec![sensor])
+                }
+            }
+        }).is_err() {
+            warn!("Could not parse '{}': omiting the sensor", value_str);
+        }
+    }
 }
 
 
