@@ -28,10 +28,9 @@ RUN apt-get update && \
 WORKDIR /source
 RUN git clone https://github.com/coredump-ch/spaceapi && \
     cd spaceapi && \
-    git checkout docopt && \
     cargo build --release && \
-    cp target/release/coredump-status /usr/local/bin/coredump-status
+    cp target/release/coredump_status /usr/local/bin/coredump_status
 
 # Entry point
 EXPOSE 3000
-CMD ["/usr/local/bin/coredump-status", "-i", "0.0.0.0", "-p", "3000"]
+CMD ["/usr/local/bin/coredump_status", "-i", "0.0.0.0", "-p", "3000"]
