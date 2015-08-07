@@ -1,8 +1,10 @@
 extern crate redis;
 
+use std::sync::{Mutex,Arc};
+
 use self::redis::{Client, Commands};
 
-use super::{DataStore, DataStoreError};
+use super::{DataStore, SafeDataStore, DataStoreError};
 
 
 /// A data store for Redis.
@@ -30,6 +32,10 @@ impl DataStore for RedisStore {
         let con = try!(self.client.get_connection());
 
         Ok(try!(con.del(key)))
+    }
+
+    fn make_safe(self) -> SafeDataStore {
+        Arc::new(Mutex::new(Box::new(self)))
     }
 
 }

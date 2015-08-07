@@ -10,7 +10,6 @@ extern crate spaceapi_server;
 
 mod utils;
 
-use std::sync::{Mutex,Arc};
 use docopt::Docopt;
 use spaceapi_server::SpaceapiServer;
 use spaceapi_server::api;
@@ -88,7 +87,7 @@ fn main() {
     ]);
 
     // Set up datastore
-    let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
+    let datastore = RedisStore::new().unwrap().make_safe();
 
     // Set up server
     let mut server = SpaceapiServer::new(host, port, status, datastore);
