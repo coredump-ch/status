@@ -3,7 +3,7 @@
 /// An ``Optional`` can contain ``Optional::Value<T>`` or ``Optional::Absent``.
 /// It is similar to an ``Option``, but ``Optional::Absent`` means it will be
 /// omitted when serialized, while ``None`` will be serialized to ``null``.
-#[derive(Debug, Copy, Clone)]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
 pub enum Optional<T> {
     Value(T),
     Absent,
@@ -63,6 +63,26 @@ impl<T> Optional<T> {
         }
     }
 
+    /// Maps an `Optional<T>` to `Optional<U>` by applying a function to a contained value
+    ///
+    /// # Examples
+    ///
+    /// Convert an `Optional<String>` into an `Optional<usize>`, consuming the original:
+    ///
+    /// ```
+    /// # use spaceapi::utils::Optional;
+    /// # use spaceapi::utils::Optional::{Value,Absent};
+    /// let num_as_str: Optional<String> = Value("10".to_string());
+    /// // `Optional::map` takes self *by value*, consuming `num_as_str`
+    /// let num_as_int: Optional<usize> = num_as_str.map(|n| n.len());
+    /// ```
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Optional<U> {
+        match self {
+            Optional::Value(x) => Optional::Value(f(x)),
+            Optional::Absent => Optional::Absent
+        }
+    }
+
     /// Applies a function to the contained value or returns a default.  see
     /// [`std::option::Option<T>::map_or`](http://doc.rust-lang.org/std/option/enum.Option.html#method.map_or)
     pub fn map_or<U, F: FnOnce(T) -> U>(self, def: U, f: F) -> U {
@@ -88,6 +108,30 @@ impl<T> Optional<T> {
         }
     }
 
+    /// Returns `Absent` if the optional is `Absent`, otherwise calls `f` with the
+    /// wrapped value and returns the result.
+    ///
+    /// Some languages call this operation flatmap.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use spaceapi::utils::Optional;
+    /// # use spaceapi::utils::Optional::{Value,Absent};
+    /// fn sq(x: u32) -> Optional<u32> { Value(x * x) }
+    /// fn nope(_: u32) -> Optional<u32> { Absent }
+    ///
+    /// assert_eq!(Value(2).and_then(sq).and_then(sq), Value(16));
+    /// assert_eq!(Value(2).and_then(sq).and_then(nope), Absent);
+    /// assert_eq!(Value(2).and_then(nope).and_then(sq), Absent);
+    /// assert_eq!(Absent.and_then(sq).and_then(sq), Absent);
+    /// ```
+    pub fn and_then<U, F: FnOnce(T) -> Optional<U>>(self, f: F) -> Optional<U> {
+        match self {
+            Optional::Value(x) => f(x),
+            Optional::Absent => Optional::Absent,
+        }
+    }
 
     /// Returns `true` if the optional is a `Absent` value
     ///
@@ -108,5 +152,26 @@ impl<T> Optional<T> {
             _ => false
         }
     }
+}
 
+impl<T> Into<Option<T>> for Optional<T> {
+    /// Convert Optional<T> into Option<T>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use spaceapi::utils::Optional;
+    /// # use spaceapi::utils::Optional::{Value,Absent};
+    /// let x: Optional<u32> = Value(2);
+    /// assert_eq!(Some(2), x.into());
+    ///
+    /// let x: Optional<u32> = Absent;
+    /// assert_eq!(None, x.into());
+    /// ```
+    fn into(self) -> Option<T> {
+        match self {
+            Optional::Value(x) => Some(x),
+            Optional::Absent => None,
+        }
+    }
 }
