@@ -16,8 +16,8 @@ use spaceapi_server::SpaceapiServer;
 use spaceapi_server::api;
 use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
 use spaceapi_server::api::Optional::{Value, Absent};
-use spaceapi_server::datastore::{DataStore, RedisStore};
 use utils::Ipv4;
+use spaceapi_server::datastore::RedisStore;
 
 
 static USAGE: &'static str = "
@@ -88,7 +88,7 @@ fn main() {
     ]);
 
     // Set up datastore
-    let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
+    let datastore = Arc::new(Mutex::new(RedisStore::new().unwrap()));
 
     // Set up server
     let mut server = SpaceapiServer::new(host, port, status, datastore);

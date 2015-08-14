@@ -136,7 +136,7 @@ mod test {
     use rustc_serialize::json::Json;
     use spaceapi::optional::Optional;
     use super::SpaceapiServer;
-    use super::datastore::{DataStore, RedisStore};
+    use super::datastore::RedisStore;
 
     fn get_test_data() -> Json {
         // Create minimal status object
