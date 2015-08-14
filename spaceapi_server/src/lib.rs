@@ -18,7 +18,7 @@ use iron::{status, headers, middleware};
 use iron::modifiers::Header;
 
 pub use spaceapi as api;
-use datastore::SafeDataStore;
+use datastore::{DataStore, SafeDataStore};
 use spaceapi::optional::Optional;
 use spaceapi::SensorTemplate;
 
@@ -30,17 +30,17 @@ use spaceapi::SensorTemplate;
 ///
 /// The ``SpaceapiServer`` includes a web server through
 /// [Hyper](http://hyper.rs/hyper/hyper/server/index.html). Simply call the ``serve`` method.
-pub struct SpaceapiServer {
+pub struct SpaceapiServer<DS: DataStore> {
     host: Ipv4Addr,
     port: u16,
     status: api::Status,
-    datastore: SafeDataStore,
+    datastore: SafeDataStore<DS>,
     sensor_specs: Vec<sensors::SensorSpec>
 }
 
-impl SpaceapiServer {
+impl<DS> SpaceapiServer<DS> where DS: DataStore {
 
-    pub fn new(host: Ipv4Addr, port: u16, status: api::Status, datastore: SafeDataStore) -> SpaceapiServer {
+    pub fn new(host: Ipv4Addr, port: u16, status: api::Status, datastore: SafeDataStore<DS>) -> SpaceapiServer<DS> {
         SpaceapiServer {
             host: host,
             port: port,
@@ -107,7 +107,7 @@ impl SpaceapiServer {
 
 }
 
-impl middleware::Handler for SpaceapiServer {
+impl<DS> middleware::Handler for SpaceapiServer<DS> where DS: DataStore {
 
     fn handle(&self, _: &mut Request) -> IronResult<Response> {
         // Get response body
@@ -162,7 +162,7 @@ mod test {
         );
 
         // Create datastore (TODO: Create dummy store for testing?)
-        let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
+        let datastore = Arc::new(Mutex::new(RedisStore::new().unwrap()));
 
         // Initialize server
         let server = SpaceapiServer::new(Ipv4Addr::new(127, 0, 0, 1), 3001, status, datastore);

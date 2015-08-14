@@ -13,8 +13,8 @@ pub trait DataStore : Send {
     fn delete(&mut self, key: &str) -> Result<(), DataStoreError>;
 }
 
-/// A datastore wrapped in an Arc, a Mutex and a Box. Safe for use in multithreaded situations.
-pub type SafeDataStore = Arc<Mutex<Box<DataStore>>>;
+/// A datastore wrapped in an Arc and a Mutex. Safe for use in multithreaded situations.
+pub type SafeDataStore<DS: DataStore> = Arc<Mutex<DS>>;
 
 /// An enum representing a datastore error.
 #[derive(Debug)]
