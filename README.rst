@@ -39,6 +39,16 @@ You can access the database with the ``redis-cli`` tool::
     127.0.0.1:6379> KEYS *
     1) "people_present"
 
+If you want to see logging, set the ``RUST_LOG`` env variable::
+
+    $ cargo build
+    $ RUST_LOG=warn target/debug/coredump_status
+
+You can also show logs only from a specific crate::
+
+    $ RUST_LOG=spaceapi_server=debug cargo run
+
+
 Storage Schema
 --------------
 
