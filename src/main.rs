@@ -46,9 +46,9 @@ fn main() {
 
     // Create new Status instance
     let mut status = api::Status::new(
-        "coredump".to_string(),
-        "https://www.coredump.ch/logo.png".to_string(),
-        "https://www.coredump.ch/".to_string(),
+        "coredump",
+        "https://www.coredump.ch/logo.png",
+        "https://www.coredump.ch/",
         api::Location {
             address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
             lat: 47.22936,
