@@ -1,0 +1,11 @@
+[package]
+name = "state_daemon"
+version = "0.1.0"
+authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
+
+[dependencies]
+hyper="*"
+rustc-serialize="*"
+
+[dependencies.spaceapi]
+path = "../spaceapi"
