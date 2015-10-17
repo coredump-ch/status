@@ -7,10 +7,11 @@ authors = [
 ]
 
 [dependencies]
-redis = "0.3"
-rustc-serialize = "0.3"
-iron = "0.1"
-log = "0.3"
+redis = "^0.5"
+rustc-serialize = "^0.3"
+iron = "^0.2"
+log = "^0.3"
+urlencoded = "^0.2"
 
 [dependencies.spaceapi]
 path = "../spaceapi"
