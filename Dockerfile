@@ -29,7 +29,8 @@ WORKDIR /source
 RUN git clone https://github.com/coredump-ch/spaceapi && \
     cd spaceapi && \
     cargo build --release && \
-    cp target/release/coredump_status /usr/local/bin/coredump_status
+    cp target/release/coredump_status /usr/local/bin/coredump_status && \
+    cd / && rm -rf /source
 
 # Entry point
 EXPOSE 3000
