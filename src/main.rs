@@ -58,7 +58,7 @@ fn main() {
             irc: Value("irc://freenode.net/#coredump".to_string()),
             twitter: Value("@coredump_ch".to_string()),
             foursquare: Value("525c20e5498e875d8231b1e5".to_string()),
-            email: Value("danilo@coredump.ch".to_string()),
+            email: Value("vorstand@lists.coredump.ch".to_string()),
         },
         vec![
             "email".to_string(),
