@@ -90,7 +90,7 @@ local codebase):
 To run a new container from the image:
 
     $ export PORT=3000
-    $ docker run -d -p 127.0.0.1:$PORT:3000 coredump/spaceapi
+    $ docker run -d --name spaceapi -p 127.0.0.1:$PORT:3000 coredump/spaceapi
 
 To stop it again:
 

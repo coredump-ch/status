@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER Danilo Bargen <mail@dbrgn.ch>
 
-ENV RUST_VERSION=1.1.0
+ENV RUST_VERSION=1.4.0
 
 # Build base system
 RUN apt-get update && \
@@ -29,7 +29,8 @@ WORKDIR /source
 RUN git clone https://github.com/coredump-ch/spaceapi && \
     cd spaceapi && \
     cargo build --release && \
-    cp target/release/coredump_status /usr/local/bin/coredump_status
+    cp target/release/coredump_status /usr/local/bin/coredump_status && \
+    cd / && rm -rf /source
 
 # Entry point
 EXPOSE 3000
