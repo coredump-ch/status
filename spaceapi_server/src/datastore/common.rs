@@ -1,6 +1,6 @@
 extern crate redis;
 
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 #[doc(no_inline)]
 pub use self::redis::RedisError;
@@ -13,18 +13,18 @@ pub trait DataStore : Send {
     fn delete(&mut self, key: &str) -> Result<(), DataStoreError>;
 }
 
-/// A datastore wrapped in a Mutex and a Box. Safe for use in multithreaded situations.
-pub type SafeDataStore = Mutex<Box<DataStore>>;
+/// A datastore wrapped in an Arc, a Mutex and a Box. Safe for use in multithreaded situations.
+pub type SafeDataStore = Arc<Mutex<Box<DataStore>>>;
 
 /// An enum representing a datastore error.
-#[derive(Debug)]
-pub enum DataStoreError {
-    RedisError(redis::RedisError),
-    HashMapError,
-}
-
-impl From<redis::RedisError> for DataStoreError {
-    fn from(err: redis::RedisError) -> DataStoreError {
-        DataStoreError::RedisError(err)
+error_type! {
+    #[derive(Debug)]
+    pub enum DataStoreError {
+        RedisError(redis::RedisError) {
+            cause;
+        },
+        HashMapError(String) {
+            desc (msg) &msg;
+        },
     }
 }
