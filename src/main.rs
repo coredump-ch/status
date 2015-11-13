@@ -86,6 +86,7 @@ fn main() {
         "https://discourse.coredump.ch/c/projects".to_string(),
         "https://github.com/coredump-ch/".to_string(),
     ]);
+    status.state.message = Value("Open every Monday from 20:00".to_string());
 
     // Set up datastore
     let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
