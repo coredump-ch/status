@@ -81,19 +81,25 @@ We currently store data in the following two redis keys:
 
 ## Docker Image
 
-To build the docker image (which pulls `master` version from Github, not the
-local codebase):
+To build the docker image based on the current codebase:
 
     $ docker build -t coredump/spaceapi:latest .
 
-To run a new container from the image:
+If you want to test this using a redis database, first launch a redis container:
+
+    $ docker run -d --name spaceapi-redis redis:3.0
+
+Then launch a new container from the image:
 
     $ export PORT=3000
-    $ docker run -d --name spaceapi -p 127.0.0.1:$PORT:3000 coredump/spaceapi
+    $ docker run -d --name spaceapi -p 127.0.0.1:$PORT:3000 --link spaceapi-redis coredump/spaceapi
+
+(If you don't need a datastore, you can also leave away the redis container and the `--link` argument.)
 
 To stop it again:
 
-    $ docker stop <container-id>
+    $ docker stop spaceapi
+    $ docker stop spaceapi-redis
 
 
 ## Docs
