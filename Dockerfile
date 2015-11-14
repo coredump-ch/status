@@ -9,7 +9,6 @@ RUN apt-get update && \
     build-essential \
     ca-certificates \
     curl \
-    git \
     libssl-dev && \
   curl -sO https://static.rust-lang.org/dist/rust-$RUST_VERSION-x86_64-unknown-linux-gnu.tar.gz && \
   tar -xzf rust-$RUST_VERSION-x86_64-unknown-linux-gnu.tar.gz && \
@@ -26,11 +25,14 @@ RUN apt-get update && \
 
 # Build spaceapi
 WORKDIR /source
-RUN git clone https://github.com/coredump-ch/spaceapi && \
-    cd spaceapi && \
-    cargo build --release && \
+COPY . /source
+RUN cargo build --release && \
     cp target/release/coredump_status /usr/local/bin/coredump_status && \
     cd / && rm -rf /source
+
+# Set runtime related environment variables
+ENV RUST_LOG=warn,spaceapi=info,spaceapi_server=info \
+    REDIS_HOST=spaceapi-redis
 
 # Entry point
 EXPOSE 3000
