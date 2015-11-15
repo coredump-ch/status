@@ -101,6 +101,12 @@ fn main() {
         name: Value("Raspberry CPU".to_string()),
         description: Absent,
     }), "raspi_temperature".to_string());
+    server.register_sensor(Box::new(TemperatureSensorTemplate {
+        unit: "°C".to_string(),
+        location: "Hackerspace".to_string(),
+        name: Value("Room Temperature".to_string()),
+        description: Absent,
+    }), "room_temperature".to_string());
     server.register_sensor(Box::new(PeopleNowPresentSensorTemplate {
         location: Value("Hackerspace".to_string()),
         name: Absent,
