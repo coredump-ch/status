@@ -9,9 +9,6 @@ repository = "https://github.com/coredump-ch/spaceapi"
 readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 
-[dependencies.spaceapi]
-path = "spaceapi"
-
 [dependencies.spaceapi_server]
 path = "spaceapi_server"
 

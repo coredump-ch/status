@@ -7,7 +7,6 @@ services:
   - redis-server
 env:
   - CRATE=.
-  - CRATE=spaceapi
   - CRATE=spaceapi_server
 script: cd $CRATE && cargo build --verbose && cargo test --verbose
 notifications:
