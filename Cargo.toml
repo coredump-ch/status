@@ -1,11 +1,11 @@
 [package]
-name = "coredump_status"
+name = "coredump-status"
 version = "0.0.1"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",
     "Danilo Bargen <mail@dbrgn.ch>",
 ]
-repository = "https://github.com/coredump-ch/spaceapi"
+repository = "https://github.com/coredump-ch/status"
 readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 

@@ -1,6 +1,6 @@
 # Coredump Space API Implementation
 
-[![Build Status](https://travis-ci.org/coredump-ch/spaceapi.svg?branch=rust)](https://travis-ci.org/coredump-ch/spaceapi)
+[![Build Status](https://travis-ci.org/coredump-ch/status.svg?branch=rust)](https://travis-ci.org/coredump-ch/status)
 
 This is our implementation of the [Space API](http://spaceapi.net/) v0.13 in
 Rust. We're using the [spaceapi](https://crates.io/crates/spaceapi) and

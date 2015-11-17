@@ -27,7 +27,7 @@ RUN apt-get update && \
 WORKDIR /source
 COPY . /source
 RUN cargo build --release && \
-    cp target/release/coredump_status /usr/local/bin/coredump_status && \
+    cp target/release/coredump-status /usr/local/bin/coredump-status && \
     cd / && rm -rf /source
 
 # Set runtime related environment variables
@@ -36,4 +36,4 @@ ENV RUST_LOG=warn,spaceapi=info,spaceapi_server=info \
 
 # Entry point
 EXPOSE 3000
-CMD ["/usr/local/bin/coredump_status", "-i", "0.0.0.0", "-p", "3000"]
+CMD ["/usr/local/bin/coredump-status", "-i", "0.0.0.0", "-p", "3000"]
