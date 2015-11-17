@@ -3,12 +3,12 @@ sudo: false
 rust:
   - stable
   - beta
+  - nightly
+matrix:
+  allow_failures:
+    - rust: nightly
 services:
   - redis-server
-env:
-  - CRATE=.
-  - CRATE=spaceapi_server
-script: cd $CRATE && cargo build --verbose && cargo test --verbose
 notifications:
   irc:
     channels:
