@@ -1,10 +1,13 @@
-# Rust Space API Implementation
+# Coredump Space API Implementation
 
 [![Build Status](https://travis-ci.org/coredump-ch/spaceapi.svg?branch=rust)](https://travis-ci.org/coredump-ch/spaceapi)
 
-This is an implementation of the [SpaceAPI](http://spaceapi.net/) v0.13 in Rust.
+This is our implementation of the [Space API](http://spaceapi.net/) v0.13 in
+Rust. We're using the [spaceapi](https://crates.io/crates/spaceapi) and
+[spaceapi-server](https://crates.io/crates/spaceapi-server) crates to simplify
+the implementation.
 
-API Documentation: http://spaceapi.net/documentation
+Space API Documentation: http://spaceapi.net/documentation
 
 
 ## Usage
@@ -73,10 +76,11 @@ You can access the database with the `redis-cli` tool:
 
 ### Schema
 
-We currently store data in the following two redis keys:
+We currently store data in the following redis keys:
 
 - people_present (integer)
 - raspi_temperature (float)
+- room_temperature (float)
 
 
 ## Docker Image
@@ -100,8 +104,3 @@ To stop it again:
 
     $ docker stop spaceapi
     $ docker stop spaceapi-redis
-
-
-## Docs
-
-You can build docs with `make docs`. Find them in the `target/doc/` directory.
