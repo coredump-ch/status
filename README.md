@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/coredump-ch/spaceapi.svg?branch=rust)](https://travis-ci.org/coredump-ch/spaceapi)
 
-This is an implementation of the [SpaceAPI](http://spaceapi.net/) v0.13 in Rust.
+This is an implementation of the [SpaceAPI](https://spaceapi.net/) v0.13 in Rust.
 
-API Documentation: http://spaceapi.net/documentation
+API Documentation: https://spaceapi.net/documentation
 
 
 ## Usage
