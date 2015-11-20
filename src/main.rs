@@ -50,19 +50,19 @@ fn main() {
         "https://www.coredump.ch/logo.png",
         "https://www.coredump.ch/",
         api::Location {
-            address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".to_string()),
+            address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".into()),
             lat: 47.22936,
             lon: 8.82949,
         },
         api::Contact {
-            irc: Value("irc://freenode.net/#coredump".to_string()),
-            twitter: Value("@coredump_ch".to_string()),
-            foursquare: Value("525c20e5498e875d8231b1e5".to_string()),
-            email: Value("vorstand@lists.coredump.ch".to_string()),
+            irc: Value("irc://freenode.net/#coredump".into()),
+            twitter: Value("@coredump_ch".into()),
+            foursquare: Value("525c20e5498e875d8231b1e5".into()),
+            email: Value("vorstand@lists.coredump.ch".into()),
         },
         vec![
-            "email".to_string(),
-            "twitter".to_string(),
+            "email".into(),
+            "twitter".into(),
         ],
     );
 
@@ -74,19 +74,19 @@ fn main() {
     });
     status.feeds = Value(api::Feeds {
         blog: Value(api::Feed {
-            _type: Value("rss".to_string()),
-            url: "https://www.coredump.ch/feed/".to_string(),
+            _type: Value("rss".into()),
+            url: "https://www.coredump.ch/feed/".into(),
         }),
         wiki: Absent,
         calendar: Absent,
         flickr: Absent,
     });
     status.projects = Value(vec![
-        "https://www.coredump.ch/projekte/".to_string(),
-        "https://discourse.coredump.ch/c/projects".to_string(),
-        "https://github.com/coredump-ch/".to_string(),
+        "https://www.coredump.ch/projekte/".into(),
+        "https://discourse.coredump.ch/c/projects".into(),
+        "https://github.com/coredump-ch/".into(),
     ]);
-    status.state.message = Value("Open every Monday from 20:00".to_string());
+    status.state.message = Value("Open every Monday from 20:00".into());
 
     // Set up datastore
     let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
@@ -96,23 +96,23 @@ fn main() {
 
     // Register sensors
     server.register_sensor(Box::new(TemperatureSensorTemplate {
-        unit: "°C".to_string(),
-        location: "Hackerspace".to_string(),
-        name: Value("Raspberry CPU".to_string()),
+        unit: "°C".into(),
+        location: "Hackerspace".into(),
+        name: Value("Raspberry CPU".into()),
         description: Absent,
-    }), "raspi_temperature".to_string());
+    }), "raspi_temperature".into());
     server.register_sensor(Box::new(TemperatureSensorTemplate {
-        unit: "°C".to_string(),
-        location: "Hackerspace".to_string(),
-        name: Value("Room Temperature".to_string()),
+        unit: "°C".into(),
+        location: "Hackerspace".into(),
+        name: Value("Room Temperature".into()),
         description: Absent,
-    }), "room_temperature".to_string());
+    }), "room_temperature".into());
     server.register_sensor(Box::new(PeopleNowPresentSensorTemplate {
-        location: Value("Hackerspace".to_string()),
+        location: Value("Hackerspace".into()),
         name: Absent,
         description: Absent,
         names: Absent,
-    }), "people_present".to_string());
+    }), "people_present".into());
 
     // Serve!
     server.serve();
