@@ -1,10 +1,5 @@
 *.swp
 *.pyc
-people.txt
-bin/
-include/
-lib/
-pip-selfcheck.json
 *.lock
 target/
 *.bk
