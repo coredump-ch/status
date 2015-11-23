@@ -87,7 +87,7 @@ fn main() {
         "https://github.com/coredump-ch/".into(),
     ]);
     status.cam = Value(vec![
-        "https://webcam.coredump.ch/cams/ultimaker.png".into(),
+        "https://webcam.coredump.ch/cams/ultimaker.jpg".into(),
     ]);
     status.state.message = Value("Open every Monday from 20:00".into());
 
