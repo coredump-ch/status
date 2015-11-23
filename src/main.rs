@@ -86,6 +86,9 @@ fn main() {
         "https://discourse.coredump.ch/c/projects".into(),
         "https://github.com/coredump-ch/".into(),
     ]);
+    status.cam = Value(vec![
+        "https://webcam.coredump.ch/cams/ultimaker.png".into(),
+    ]);
     status.state.message = Value("Open every Monday from 20:00".into());
 
     // Set up datastore
