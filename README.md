@@ -87,7 +87,7 @@ We currently store data in the following redis keys:
 
 To build the docker image based on the current codebase:
 
-    $ docker build -t coredump/spaceapi:latest .
+    $ docker build -t coredump/status:latest .
 
 If you want to test this using a redis database, first launch a redis container:
 
@@ -96,7 +96,7 @@ If you want to test this using a redis database, first launch a redis container:
 Then launch a new container from the image:
 
     $ export PORT=3000
-    $ docker run -d --name spaceapi -p 127.0.0.1:$PORT:3000 --link spaceapi-redis coredump/spaceapi
+    $ docker run -d --name spaceapi -p 127.0.0.1:$PORT:3000 --link spaceapi-redis coredump/status
 
 (If you don't need a datastore, you can also leave away the redis container and the `--link` argument.)
 
@@ -104,3 +104,6 @@ To stop it again:
 
     $ docker stop spaceapi
     $ docker stop spaceapi-redis
+
+The docker image at https://hub.docker.com/r/coredump/status/ will be
+automatically rebuilt on every push to master.
