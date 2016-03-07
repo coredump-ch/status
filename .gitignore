@@ -1,5 +1,4 @@
 *.swp
 *.pyc
-*.lock
 target/
 *.bk
