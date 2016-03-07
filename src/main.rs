@@ -90,7 +90,7 @@ fn main() {
         "https://webcam.coredump.ch/cams/ultimaker_0.jpg".into(),
         "https://webcam.coredump.ch/cams/ultimaker_1.jpg".into(),
     ]);
-    status.state.message = Value("Open every Monday from 20:00".into());
+    status.state.message = Value("Open Mondays from 20:00".into());
 
     // Set up datastore
     let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
