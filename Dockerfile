@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER Danilo Bargen <mail@dbrgn.ch>
 
-ENV RUST_VERSION=1.4.0
+ENV RUST_VERSION=1.7.0
 
 # Build base system
 RUN apt-get update && \
