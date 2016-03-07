@@ -1,9 +1,10 @@
 [package]
 name = "coredump-status"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",
     "Danilo Bargen <mail@dbrgn.ch>",
+    "Stefan Schindler <stefan@estada.ch>",
 ]
 repository = "https://github.com/coredump-ch/status"
 readme = "./README.rst"
@@ -13,4 +14,4 @@ keywords = ["json", "spaceapi"]
 docopt = "^0.6"
 rustc-serialize = "^0.3"
 env_logger = "^0.3"
-spaceapi-server = "^0.1.0"
+spaceapi-server = "^0.1.1"
