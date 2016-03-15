@@ -10,13 +10,12 @@ extern crate spaceapi_server;
 
 mod utils;
 
-use std::sync::{Arc, Mutex};
+use std::process::exit;
 use docopt::Docopt;
 use spaceapi_server::SpaceapiServer;
 use spaceapi_server::api;
 use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
 use spaceapi_server::api::Optional::{Value, Absent};
-use spaceapi_server::datastore::{DataStore, RedisStore};
 use utils::Ipv4;
 
 
@@ -94,10 +93,17 @@ fn main() {
     status.state.message = Value("Open Mondays from 20:00".into());
 
     // Set up datastore
-    let datastore = Arc::new(Mutex::new(Box::new(RedisStore::new().unwrap()) as Box<DataStore>));
+    let redis_url = "redis://127.0.0.1/";
+
+    // Set up modifiers
+    let modifiers = Vec::new();
 
     // Set up server
-    let mut server = SpaceapiServer::new(host, port, status, datastore);
+    let mut server = SpaceapiServer::new((host, port), status, redis_url, modifiers)
+        .unwrap_or_else(|e| {
+            println!("Could not initialize server: {:?}", e);
+            exit(1);
+        });
 
     // Register sensors
     server.register_sensor(Box::new(TemperatureSensorTemplate {
@@ -120,5 +126,8 @@ fn main() {
     }), "people_present".into());
 
     // Serve!
-    server.serve();
+    server.serve().unwrap_or_else(|e| {
+        println!("Could not start server: {:?}", e);
+        exit(1);
+    });
 }
