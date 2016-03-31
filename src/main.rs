@@ -83,7 +83,7 @@ fn main() {
     });
     status.projects = Value(vec![
         "https://www.coredump.ch/projekte/".into(),
-        "https://discourse.coredump.ch/c/projects".into(),
+        "https://forum.coredump.ch/c/projects".into(),
         "https://github.com/coredump-ch/".into(),
     ]);
     status.cam = Value(vec![
