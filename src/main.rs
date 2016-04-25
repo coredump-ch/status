@@ -105,19 +105,19 @@ fn main() {
         location: "Hackerspace".into(),
         name: Value("Raspberry CPU".into()),
         description: Absent,
-    }), "raspi_temperature".into());
+    }), "temperature_raspi".into());
     server.register_sensor(Box::new(TemperatureSensorTemplate {
         unit: "°C".into(),
         location: "Hackerspace".into(),
         name: Value("Room Temperature".into()),
         description: Absent,
-    }), "room_temperature".into());
+    }), "temperature_room".into());
     server.register_sensor(Box::new(PeopleNowPresentSensorTemplate {
         location: Value("Hackerspace".into()),
         name: Absent,
         description: Absent,
         names: Absent,
-    }), "people_present".into());
+    }), "people_now_present".into());
 
     // Serve!
     server.serve();
