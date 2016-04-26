@@ -50,15 +50,15 @@ fn main() {
         "https://www.coredump.ch/logo.png",
         "https://www.coredump.ch/",
         api::Location {
-            address: Value("Spinnereistrasse 2, 8640 Rapperswil, Switzerland".into()),
-            lat: 47.22936,
-            lon: 8.82949,
+            address: Value("Zürcherstrasse 6, 8640 Rapperswil, Switzerland".into()),
+            lat: 47.22939,
+            lon: 8.82041,
         },
         api::Contact {
             irc: Value("irc://freenode.net/#coredump".into()),
             twitter: Value("@coredump_ch".into()),
-            foursquare: Value("525c20e5498e875d8231b1e5".into()),
             email: Value("vorstand@lists.coredump.ch".into()),
+            foursquare: Absent,
         },
         vec![
             "email".into(),
