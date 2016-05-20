@@ -93,9 +93,10 @@ fn main() {
     status.state.message = Value("Open Mondays from 20:00".into());
 
     // Set up server
-    let mut server = SpaceapiServer::new((host, port), status, "redis://localhost",
+    let redis_url = "redis://localhost";
+    let mut server = SpaceapiServer::new((host, port), status, redis_url,
                                          vec![Box::new(StateFromPeopleNowPresent)])
-        .expect("Could not initialize server");
+                         .expect("Could not initialize server");
 
     // Register sensors
     server.register_sensor(Box::new(TemperatureSensorTemplate {
