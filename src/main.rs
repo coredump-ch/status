@@ -94,7 +94,8 @@ fn main() {
 
     // Set up server
     let mut server = SpaceapiServer::new((host, port), status, "redis://localhost",
-                                         vec![Box::new(StateFromPeopleNowPresent)]).unwrap();
+                                         vec![Box::new(StateFromPeopleNowPresent)])
+        .expect("Could not initialize server");
 
     // Register sensors
     server.register_sensor(Box::new(TemperatureSensorTemplate {
@@ -117,5 +118,5 @@ fn main() {
     }), "people_now_present".into());
 
     // Serve!
-    server.serve().unwrap();
+    server.serve().expect("Could not start the server");
 }
