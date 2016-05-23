@@ -1,11 +1,11 @@
 [root]
 name = "coredump-status"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "docopt 0.6.78 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.18 (registry+https://github.com/rust-lang/crates.io-index)",
- "spaceapi-server 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "spaceapi-server 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -340,7 +340,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "router"
-version = "0.0.15"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "iron 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -415,14 +415,15 @@ dependencies = [
 
 [[package]]
 name = "spaceapi-server"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "error-type 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hyper 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "iron 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "redis 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "router 0.0.15 (registry+https://github.com/rust-lang/crates.io-index)",
+ "router 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.18 (registry+https://github.com/rust-lang/crates.io-index)",
  "spaceapi 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "urlencoded 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
