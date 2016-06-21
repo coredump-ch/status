@@ -23,7 +23,7 @@ To update a sensor value, send a PUT request to the sensor endpoint:
 Examples for [curl](http://curl.haxx.se/) and [httpie](https://github.zoe3m/):
 
     $ curl -v -X PUT -d value=42.1337 http://127.0.0.1:3000/sensors/raspi_temperature/
-    $ http --form put :3000/sensors/people_present/ value=3
+    $ http --form put :3000/sensors/people_now_present/ value=3
 
 
 ## Development
@@ -67,18 +67,18 @@ To use the redis storage start the redis server:
 You can access the database with the `redis-cli` tool:
 
     % redis-cli
-    127.0.0.1:6379> SET people_present 1
+    127.0.0.1:6379> SET people_now_present 1
     OK
-    127.0.0.1:6379> GET people_present
+    127.0.0.1:6379> GET people_now_present
     "1"
     127.0.0.1:6379> KEYS *
-    1) "people_present"
+    1) "people_now_present"
 
 ### Schema
 
 We currently store data in the following redis keys:
 
-- people_present (integer)
+- people_now_present (integer)
 - raspi_temperature (float)
 - room_temperature (float)
 
