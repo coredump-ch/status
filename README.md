@@ -42,6 +42,9 @@ You can also specify a different ip or port:
 
     $ cargo run -- -i 0.0.0.0 -p 1337
 
+To specify another Redis instance than `redis://127.0.0.1:6379/0`, set the
+`REDIS_HOST`, `REDIS_PORT` and/or `REDIS_DB` env variables.
+
 ### Logging
 
 If you want to see logging, set the `RUST_LOG` env variable:

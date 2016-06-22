@@ -10,6 +10,7 @@ extern crate spaceapi_server;
 
 mod utils;
 
+use std::env;
 use docopt::Docopt;
 use spaceapi_server::SpaceapiServer;
 use spaceapi_server::api;
@@ -92,9 +93,17 @@ fn main() {
     ]);
     status.state.message = Value("Open Mondays from 20:00".into());
 
+    // Redis connection info
+    let redis_host: String = env::var("REDIS_HOST")
+        .unwrap_or("127.0.0.1".to_string());
+    let redis_port: u16 = env::var("REDIS_PORT")
+        .unwrap_or("6379".to_string()).parse().unwrap_or(6379);
+    let redis_db: i64 = env::var("REDIS_DB")
+        .unwrap_or("0".to_string()).parse().unwrap_or(0);
+    let redis_url = format!("redis://{}:{}/{}", redis_host, redis_port, redis_db);
+
     // Set up server
-    let redis_url = "redis://localhost";
-    let mut server = SpaceapiServer::new((host, port), status, redis_url,
+    let mut server = SpaceapiServer::new((host, port), status, &*redis_url,
                                          vec![Box::new(StateFromPeopleNowPresent)])
                          .expect("Could not initialize server");
 
