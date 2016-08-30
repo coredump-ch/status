@@ -1,6 +1,6 @@
 [package]
 name = "coredump-status"
-version = "0.2.1"
+version = "0.2.2"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",
     "Danilo Bargen <mail@dbrgn.ch>",
@@ -11,7 +11,7 @@ readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 
 [dependencies]
-docopt = "^0.6"
-rustc-serialize = "^0.3"
-env_logger = "^0.3"
-spaceapi-server = "^0.2"
+docopt = "0.6"
+rustc-serialize = "0.3"
+env_logger = "0.3"
+spaceapi-server = "0.3"
