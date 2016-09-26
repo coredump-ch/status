@@ -97,7 +97,6 @@ fn main() {
     ]);
     status.cam = Value(vec![
         "https://webcam.coredump.ch/cams/ultimaker_0.jpg".into(),
-        "https://webcam.coredump.ch/cams/ultimaker_1.jpg".into(),
     ]);
     status.state.message = Value("Open Mondays from 20:00".into());
 
