@@ -109,5 +109,5 @@ To stop it again:
     $ docker stop spaceapi
     $ docker stop spaceapi-redis
 
-The docker image at https://hub.docker.com/r/coredump/status/ will be
+The docker image at https://quay.io/repository/coredump/status will be
 automatically rebuilt on every push to master.
