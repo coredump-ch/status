@@ -1,6 +1,6 @@
 [package]
 name = "coredump-status"
-version = "0.2.2"
+version = "0.2.3"
 authors = [
     "Raphael Nestler <raphael.nestler@gmail.com>",
     "Danilo Bargen <mail@dbrgn.ch>",
@@ -8,7 +8,7 @@ authors = [
 ]
 repository = "https://github.com/coredump-ch/status"
 readme = "./README.rst"
-keywords = ["json", "spaceapi"]
+keywords = ["json", "spaceapi","hackerspace"]
 
 [dependencies]
 docopt = "0.6"
