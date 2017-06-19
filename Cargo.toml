@@ -13,5 +13,5 @@ keywords = ["json", "spaceapi"]
 [dependencies]
 docopt = "0.6"
 rustc-serialize = "0.3"
-env_logger = "0.3"
+env_logger = "0.4"
 spaceapi-server = "0.3"
