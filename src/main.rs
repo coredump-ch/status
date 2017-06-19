@@ -5,10 +5,9 @@
 //!     ./coredump_status [-p PORT] [-i IP]
 extern crate env_logger;
 extern crate docopt;
-extern crate rustc_serialize;
+#[macro_use]
+extern crate serde_derive;
 extern crate spaceapi_server;
-
-mod utils;
 
 use std::env;
 use docopt::Docopt;
@@ -17,8 +16,6 @@ use spaceapi_server::api;
 use spaceapi_server::modifiers::StateFromPeopleNowPresent;
 use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
 use spaceapi_server::api::Optional::{Value, Absent};
-use utils::Ipv4;
-
 
 static USAGE: &'static str = "
 Usage: coredump_status [-p PORT] [-i IP]
@@ -28,10 +25,10 @@ Options:
     -i IP    The ipv4 address to listen on [default: 127.0.0.1].
 ";
 
-#[derive(RustcDecodable, Debug)]
+#[derive(Deserialize, Debug)]
 struct Args {
     flag_p: u16,
-    flag_i: Ipv4,
+    flag_i: std::net::Ipv4Addr,
 }
 
 #[cfg_attr(test, allow(dead_code))]
@@ -39,9 +36,9 @@ fn main() {
     env_logger::init().unwrap();
 
     // Parse arguments
-    let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
+    let args: Args = Docopt::new(USAGE).and_then(|d| d.deserialize())
                                        .unwrap_or_else(|e| e.exit());
-    let host = args.flag_i.ip;
+    let host = args.flag_i;
     let port = args.flag_p;
 
     // Create new Status instance
