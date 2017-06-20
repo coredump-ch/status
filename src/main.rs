@@ -11,11 +11,10 @@ extern crate spaceapi_server;
 
 use std::env;
 use docopt::Docopt;
-use spaceapi_server::SpaceapiServer;
+use spaceapi_server::SpaceapiServerBuilder;
 use spaceapi_server::api;
 use spaceapi_server::modifiers::StateFromPeopleNowPresent;
 use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
-use spaceapi_server::api::Optional::{Value, Absent};
 
 static USAGE: &'static str = "
 Usage: coredump_status [-p PORT] [-i IP]
@@ -47,24 +46,15 @@ fn main() {
         "https://www.coredump.ch/wp-content/uploads/2016/11/logo.png",
         "https://www.coredump.ch/",
         api::Location {
-            address: Value("Zürcherstrasse 6, 8640 Rapperswil, Switzerland".into()),
+            address: Some("Zürcherstrasse 6, 8640 Rapperswil, Switzerland".into()),
             lat: 47.22939,
             lon: 8.82041,
         },
         api::Contact {
-            irc: Value("irc://freenode.net/#coredump".into()),
-            twitter: Value("@coredump_ch".into()),
-            email: Value("vorstand@lists.coredump.ch".into()),
-            phone: Absent,
-            sip: Absent,
-            keymasters: Absent,
-            facebook: Absent,
-            google: Absent,
-            identica: Absent,
-            foursquare: Absent,
-            ml: Absent,
-            jabber: Absent,
-            issue_mail: Absent,
+            irc: Some("irc://freenode.net/#coredump".into()),
+            twitter: Some("@coredump_ch".into()),
+            email: Some("vorstand@lists.coredump.ch".into()),
+            ..Default::default()
         },
         vec![
             "email".into(),
@@ -73,29 +63,29 @@ fn main() {
     );
 
     // Add optional data
-    status.spacefed = Value(api::Spacefed {
+    status.spacefed = Some(api::Spacefed {
         spacenet: false,
         spacesaml: false,
         spacephone: false,
     });
-    status.feeds = Value(api::Feeds {
-        blog: Value(api::Feed {
-            _type: Value("rss".into()),
+    status.feeds = Some(api::Feeds {
+        blog: Some(api::Feed {
+            type_: Some("rss".into()),
             url: "https://www.coredump.ch/feed/".into(),
         }),
-        wiki: Absent,
-        calendar: Absent,
-        flickr: Absent,
+        wiki: None,
+        calendar: None,
+        flickr: None,
     });
-    status.projects = Value(vec![
+    status.projects = Some(vec![
         "https://www.coredump.ch/projekte/".into(),
         "https://forum.coredump.ch/c/projects".into(),
         "https://github.com/coredump-ch/".into(),
     ]);
-    status.cam = Value(vec![
+    status.cam = Some(vec![
         "https://webcam.coredump.ch/cams/ultimaker_0.jpg".into(),
     ]);
-    status.state.message = Value("Open Mondays from 20:00".into());
+    status.state.message = Some("Open Mondays from 20:00".into());
 
     // Redis connection info
     let redis_host: String = env::var("REDIS_HOST")
@@ -106,31 +96,28 @@ fn main() {
         .unwrap_or("0".to_string()).parse().unwrap_or(0);
     let redis_url = format!("redis://{}:{}/{}", redis_host, redis_port, redis_db);
 
-    // Set up server
-    let mut server = SpaceapiServer::new((host, port), status, &*redis_url,
-                                         vec![Box::new(StateFromPeopleNowPresent)])
-                         .expect("Could not initialize server");
-
-    // Register sensors
-    server.register_sensor(Box::new(TemperatureSensorTemplate {
-        unit: "°C".into(),
-        location: "Hackerspace".into(),
-        name: Value("Raspberry CPU".into()),
-        description: Absent,
-    }), "temperature_raspi".into());
-    server.register_sensor(Box::new(TemperatureSensorTemplate {
-        unit: "°C".into(),
-        location: "Hackerspace".into(),
-        name: Value("Room Temperature".into()),
-        description: Absent,
-    }), "temperature_room".into());
-    server.register_sensor(Box::new(PeopleNowPresentSensorTemplate {
-        location: Value("Hackerspace".into()),
-        name: Absent,
-        description: Absent,
-        names: Absent,
-    }), "people_now_present".into());
-
-    // Serve!
-    server.serve().expect("Could not start the server");
+    SpaceapiServerBuilder::new(status)
+        .redis_connection_info(&*redis_url)
+        .add_status_modifier(StateFromPeopleNowPresent)
+        .add_sensor(TemperatureSensorTemplate {
+            unit: "°C".into(),
+            location: "Hackerspace".into(),
+            name: Some("Raspberry CPU".into()),
+            description: None,
+        }, "temperature_raspi".into())
+        .add_sensor(TemperatureSensorTemplate {
+            unit: "°C".into(),
+            location: "Hackerspace".into(),
+            name: Some("Room Temperature".into()),
+            description: None,
+        }, "temperature_room".into())
+        .add_sensor(PeopleNowPresentSensorTemplate {
+            location: Some("Hackerspace".into()),
+            name: None,
+            description: None,
+            names: None,
+        }, "people_now_present".into())
+        .build()
+        .expect("Could not build server")
+        .serve((host, port)).expect("Could not start the server");
 }
