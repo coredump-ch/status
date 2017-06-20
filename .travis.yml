@@ -2,10 +2,5 @@ language: rust
 sudo: false
 rust:
   - stable
-  - beta
-  - nightly
-matrix:
-  allow_failures:
-    - rust: nightly
 services:
   - redis-server
