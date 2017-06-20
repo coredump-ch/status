@@ -41,50 +41,43 @@ fn main() {
     let port = args.flag_p;
 
     // Create new Status instance
-    let mut status = api::Status::new(
-        "coredump",
-        "https://www.coredump.ch/wp-content/uploads/2016/11/logo.png",
-        "https://www.coredump.ch/",
-        api::Location {
+    let mut status = api::StatusBuilder::new("coredump")
+        .logo("https://www.coredump.ch/wp-content/uploads/2016/11/logo.png")
+        .url("https://www.coredump.ch/")
+        .location(api::Location {
             address: Some("Zürcherstrasse 6, 8640 Rapperswil, Switzerland".into()),
             lat: 47.22939,
             lon: 8.82041,
-        },
-        api::Contact {
+        })
+        .contact(api::Contact {
             irc: Some("irc://freenode.net/#coredump".into()),
             twitter: Some("@coredump_ch".into()),
             email: Some("vorstand@lists.coredump.ch".into()),
             ..Default::default()
-        },
-        vec![
-            "email".into(),
-            "twitter".into(),
-        ],
-    );
+        })
+        .add_issue_report_channel("email")
+        .add_issue_report_channel("twitter")
+        .spacefed(api::Spacefed {
+            spacenet: false,
+            spacesaml: false,
+            spacephone: false,
+        })
+        .feeds(api::Feeds {
+            blog: Some(api::Feed {
+                type_: Some("rss".into()),
+                url: "https://www.coredump.ch/feed/".into(),
+            }),
+            wiki: None,
+            calendar: None,
+            flickr: None,
+        })
+        .add_project("https://www.coredump.ch/projekte/")
+        .add_project("https://forum.coredump.ch/c/projects")
+        .add_project("https://github.com/coredump-ch/")
+        .add_cam("https://webcam.coredump.ch/cams/ultimaker_0.jpg")
+        .build()
+        .expect("Couldn't create status object");
 
-    // Add optional data
-    status.spacefed = Some(api::Spacefed {
-        spacenet: false,
-        spacesaml: false,
-        spacephone: false,
-    });
-    status.feeds = Some(api::Feeds {
-        blog: Some(api::Feed {
-            type_: Some("rss".into()),
-            url: "https://www.coredump.ch/feed/".into(),
-        }),
-        wiki: None,
-        calendar: None,
-        flickr: None,
-    });
-    status.projects = Some(vec![
-        "https://www.coredump.ch/projekte/".into(),
-        "https://forum.coredump.ch/c/projects".into(),
-        "https://github.com/coredump-ch/".into(),
-    ]);
-    status.cam = Some(vec![
-        "https://webcam.coredump.ch/cams/ultimaker_0.jpg".into(),
-    ]);
     status.state.message = Some("Open Mondays from 20:00".into());
 
     // Redis connection info
