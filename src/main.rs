@@ -21,13 +21,13 @@ Usage: coredump_status [-p PORT] [-i IP]
 
 Options:
     -p PORT  The port to listen on [default: 3000].
-    -i IP    The ipv4 address to listen on [default: 127.0.0.1].
+    -i IP    The IP address to listen on [default: 127.0.0.1].
 ";
 
 #[derive(Deserialize, Debug)]
 struct Args {
     flag_p: u16,
-    flag_i: std::net::Ipv4Addr,
+    flag_i: std::net::IpAddr,
 }
 
 #[cfg_attr(test, allow(dead_code))]
