@@ -4,3 +4,8 @@ rust:
   - stable
 services:
   - redis-server
+  - docker
+script:
+  - cargo build --verbose
+  - cargo test --verbose
+  - docker build -t quay.io/coredump/status .
