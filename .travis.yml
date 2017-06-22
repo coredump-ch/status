@@ -1,11 +1,13 @@
-language: rust
-sudo: false
-rust:
-  - stable
+sudo: required
 services:
   - redis-server
   - docker
 script:
-  - cargo build --verbose
-  - cargo test --verbose
   - docker build -t quay.io/coredump/status .
+  - bash -c '
+      docker run -e REDIS_HOST=localhost -p 3000:3000 --net=host quay.io/coredump/status &
+      PID=$!
+      curl http://localhost:3000/
+      curl -s -o /dev/^Cw "%{http_code}" localhost:3000
+      kill $PID
+    '
