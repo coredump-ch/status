@@ -45,9 +45,9 @@ fn main() {
         .logo("https://www.coredump.ch/wp-content/uploads/2016/11/logo.png")
         .url("https://www.coredump.ch/")
         .location(api::Location {
-            address: Some("Zürcherstrasse 6, 8640 Rapperswil, Switzerland".into()),
-            lat: 47.22939,
-            lon: 8.82041,
+            address: Some("Holzwiesstrasse 50, 8645 Jona, Switzerland".into()),
+            lat: 47.2359607,
+            lon: 8.8410057,
         })
         .contact(api::Contact {
             irc: Some("irc://freenode.net/#coredump".into()),
