@@ -101,9 +101,15 @@ fn main() {
         .add_sensor(TemperatureSensorTemplate {
             unit: "°C".into(),
             location: "Hackerspace".into(),
-            name: Some("Room Temperature".into()),
+            name: Some("Room Temperature (Entrance)".into()),
             description: None,
-        }, "temperature_room".into())
+        }, "temperature_entrance".into())
+        .add_sensor(TemperatureSensorTemplate {
+            unit: "°C".into(),
+            location: "Hackerspace".into(),
+            name: Some("Room Temperature (Tables)".into()),
+            description: None,
+        }, "temperature_tables".into())
         .add_sensor(PeopleNowPresentSensorTemplate {
             location: Some("Hackerspace".into()),
             name: None,
