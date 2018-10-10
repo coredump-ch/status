@@ -3,12 +3,12 @@
 [![Build Status](https://travis-ci.org/coredump-ch/status.svg?branch=rust)](https://travis-ci.org/coredump-ch/status)
 [![Docker Repository on Quay](https://quay.io/repository/coredump/status/status "Docker Repository on Quay")](https://quay.io/repository/coredump/status)
 
-This is our implementation of the [Space API](http://spaceapi.net/) v0.13 in
+This is our implementation of the [Space API](https://spaceapi.io/) v0.13 in
 Rust. We're using the [spaceapi](https://crates.io/crates/spaceapi) and
 [spaceapi-server](https://crates.io/crates/spaceapi-server) crates to simplify
 the implementation.
 
-Space API Documentation: http://spaceapi.net/documentation
+Space API Documentation: https://spaceapi.io/documentation
 
 
 ## Usage
