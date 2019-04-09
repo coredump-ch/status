@@ -32,7 +32,7 @@ struct Args {
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
-    env_logger::init().unwrap();
+    env_logger::init();
 
     // Parse arguments
     let args: Args = Docopt::new(USAGE).and_then(|d| d.deserialize())
@@ -78,6 +78,7 @@ fn main() {
         .build()
         .expect("Couldn't create status object");
 
+    // Set state message
     status.state.message = Some("Open Mondays from 20:00".into());
 
     // Redis connection info
@@ -89,7 +90,8 @@ fn main() {
         .unwrap_or("0".to_string()).parse().unwrap_or(0);
     let redis_url = format!("redis://{}:{}/{}", redis_host, redis_port, redis_db);
 
-    SpaceapiServerBuilder::new(status)
+    // Create server
+    let server = SpaceapiServerBuilder::new(status)
         .redis_connection_info(&*redis_url)
         .add_status_modifier(StateFromPeopleNowPresent)
         .add_sensor(TemperatureSensorTemplate {
@@ -117,6 +119,7 @@ fn main() {
             names: None,
         }, "people_now_present".into())
         .build()
-        .expect("Could not build server")
-        .serve((host, port)).expect("Could not start the server");
+        .expect("Could not build server");
+
+    server.serve((host, port)).expect("Could not start the server");
 }

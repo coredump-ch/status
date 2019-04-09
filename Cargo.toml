@@ -11,8 +11,8 @@ readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 
 [dependencies]
-docopt = "0.8"
-serde = "1.0"
-serde_derive = "1.0"
-env_logger = "0.4"
+docopt = "1"
+serde = "1"
+serde_derive = "1"
+env_logger = "0.6"
 spaceapi-server = "0.4"
