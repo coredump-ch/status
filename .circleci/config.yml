@@ -1,0 +1,68 @@
+version: 2
+jobs:
+
+  test:
+    docker:
+      - image: rust:1.33
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-cargo-cache-{{ arch }}-{{ .Branch }}
+            - v1-cargo-cache-{{ arch }}
+      - run: rustc --version && cargo --version
+      - run: cargo build
+      - run: cargo test
+      - save_cache:
+          key: v1-cargo-cache-{{ arch }}-{{ .Branch }}
+          paths:
+            - target
+            - /usr/local/cargo
+      - save_cache:
+          key: v1-cargo-cache-{{ arch }}
+          paths:
+            - target
+            - /usr/local/cargo
+
+  docker-build:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build . --no-cache
+  docker-push:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: >
+          docker build .  --no-cache -t coredump/status:${CIRCLE_BRANCH}
+          && docker login -u $DOCKER_USER -p $DOCKER_API_KEY
+          && docker push coredump/status
+
+workflows:
+  version: 2
+  onpush:
+    jobs:
+      - test
+      - docker-build:
+          filters:
+            branches:
+              ignore: master
+      - docker-push:
+          filters:
+            branches:
+              only: master
+  weekly:
+    triggers:
+      - schedule:
+          cron: "30 5 * * 3"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - test
+      - docker-push

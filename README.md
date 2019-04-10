@@ -1,7 +1,7 @@
 # Coredump Space API Implementation
 
-[![Build Status](https://travis-ci.org/coredump-ch/status.svg?branch=rust)](https://travis-ci.org/coredump-ch/status)
-[![Docker Repository on Quay](https://quay.io/repository/coredump/status/status "Docker Repository on Quay")](https://quay.io/repository/coredump/status)
+[![Build status](https://circleci.com/gh/coredump-ch/status.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/coredump-ch/status)
+[![Docker Image](https://img.shields.io/badge/docker%20image-coredump%2Fstatus-yellow.svg)](https://hub.docker.com/r/coredump/status)
 
 This is our implementation of the [Space API](https://spaceapi.io/) v0.13 in
 Rust. We're using the [spaceapi](https://crates.io/crates/spaceapi) and
@@ -111,3 +111,7 @@ To stop it again:
 
 The docker image at https://quay.io/repository/coredump/status will be
 automatically rebuilt on every push to master.
+
+<!-- Badges -->
+[circle-ci]: https://circleci.com/gh/coredump-ch/status/tree/master
+[circle-ci-badge]: https://circleci.com/gh/coredump-ch/status/tree/master.svg?style=shield
