@@ -21,7 +21,7 @@ To update a sensor value, send a PUT request to the sensor endpoint:
 
     PUT /sensors/<data_key>/ value=<value>
 
-Examples for [curl](http://curl.haxx.se/) and [httpie](https://github.zoe3m/):
+Examples for [curl](http://curl.haxx.se/) and [HTTPie](https://httpie.org/):
 
     $ curl -v -X PUT -d value=42.1337 http://127.0.0.1:3000/sensors/raspi_temperature/
     $ http --form put :3000/sensors/people_now_present/ value=3
