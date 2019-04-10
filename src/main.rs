@@ -75,6 +75,7 @@ fn main() {
         .add_project("https://forum.coredump.ch/c/projects")
         .add_project("https://github.com/coredump-ch/")
         .add_cam("https://webcam.coredump.ch/cams/ultimaker_0.jpg")
+        .add_extension("ccc", "chaostreff")
         .build()
         .expect("Couldn't create status object");
 
