@@ -3,13 +3,10 @@
 //! Start this via the commandline:
 //!
 //!     ./coredump_status [-p PORT] [-i IP]
-extern crate docopt;
-extern crate env_logger;
-#[macro_use]
-extern crate serde_derive;
-extern crate spaceapi_server;
 
 use docopt::Docopt;
+use env_logger;
+use serde_derive::Deserialize;
 use spaceapi_server::api;
 use spaceapi_server::api::sensors::{PeopleNowPresentSensorTemplate, TemperatureSensorTemplate};
 use spaceapi_server::modifiers::StateFromPeopleNowPresent;
