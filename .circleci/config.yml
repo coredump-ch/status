@@ -76,6 +76,8 @@ workflows:
   onpush:
     jobs:
       - test
+      - fmt
+      - lint
       - docker-build:
           filters:
             branches:
