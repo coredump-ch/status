@@ -38,6 +38,20 @@ jobs:
           key: v1-cargo-fmt-cache
           paths:
             - /usr/local/cargo
+  lint:
+    docker:
+      - image: rust:1.33
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-cargo-lint-cache
+      - run: rustup component add clippy
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - save_cache:
+          key: v1-cargo-lint-cache
+          paths:
+            - /usr/local/cargo
 
   docker-build:
     docker:
@@ -62,6 +76,8 @@ workflows:
   onpush:
     jobs:
       - test
+      - fmt
+      - lint
       - docker-build:
           filters:
             branches:
