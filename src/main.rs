@@ -13,7 +13,7 @@ use spaceapi_server::modifiers::StateFromPeopleNowPresent;
 use spaceapi_server::SpaceapiServerBuilder;
 use std::env;
 
-static USAGE: &'static str = "
+static USAGE: &str = "
 Usage: coredump_status [-p PORT] [-i IP]
 
 Options:
@@ -44,8 +44,8 @@ fn main() {
         .url("https://www.coredump.ch/")
         .location(api::Location {
             address: Some("Holzwiesstrasse 50, 8645 Jona, Switzerland".into()),
-            lat: 47.2359607,
-            lon: 8.8410057,
+            lat: 47.235_960_7,
+            lon: 8.841_005_7,
         })
         .contact(api::Contact {
             irc: Some("irc://freenode.net/#coredump".into()),
@@ -84,13 +84,13 @@ fn main() {
     status.state.message = Some("Open Mondays from 20:00".into());
 
     // Redis connection info
-    let redis_host: String = env::var("REDIS_HOST").unwrap_or("127.0.0.1".to_string());
+    let redis_host: String = env::var("REDIS_HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
     let redis_port: u16 = env::var("REDIS_PORT")
-        .unwrap_or("6379".to_string())
+        .unwrap_or_else(|_| "6379".to_string())
         .parse()
         .unwrap_or(6379);
     let redis_db: i64 = env::var("REDIS_DB")
-        .unwrap_or("0".to_string())
+        .unwrap_or_else(|_| "0".to_string())
         .parse()
         .unwrap_or(0);
     let redis_url = format!("redis://{}:{}/{}", redis_host, redis_port, redis_db);
