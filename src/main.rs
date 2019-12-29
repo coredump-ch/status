@@ -69,7 +69,10 @@ fn main() {
                 url: "https://www.coredump.ch/feed/".into(),
             }),
             wiki: None,
-            calendar: None,
+            calendar: Some(api::Feed {
+                type_: Some("ical".into()),
+                url: "https://www.coredump.ch/events/?ical=1".into(),
+            }),
             flickr: None,
         })
         .add_project("https://www.coredump.ch/projekte/")
