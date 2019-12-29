@@ -3,18 +3,18 @@
 //! Start this via the commandline:
 //!
 //!     ./coredump_status [-p PORT] [-i IP]
-extern crate env_logger;
 extern crate docopt;
+extern crate env_logger;
 #[macro_use]
 extern crate serde_derive;
 extern crate spaceapi_server;
 
-use std::env;
 use docopt::Docopt;
-use spaceapi_server::SpaceapiServerBuilder;
 use spaceapi_server::api;
+use spaceapi_server::api::sensors::{PeopleNowPresentSensorTemplate, TemperatureSensorTemplate};
 use spaceapi_server::modifiers::StateFromPeopleNowPresent;
-use spaceapi_server::api::sensors::{TemperatureSensorTemplate, PeopleNowPresentSensorTemplate};
+use spaceapi_server::SpaceapiServerBuilder;
+use std::env;
 
 static USAGE: &'static str = "
 Usage: coredump_status [-p PORT] [-i IP]
@@ -35,8 +35,9 @@ fn main() {
     env_logger::init();
 
     // Parse arguments
-    let args: Args = Docopt::new(USAGE).and_then(|d| d.deserialize())
-                                       .unwrap_or_else(|e| e.exit());
+    let args: Args = Docopt::new(USAGE)
+        .and_then(|d| d.deserialize())
+        .unwrap_or_else(|e| e.exit());
     let host = args.flag_i;
     let port = args.flag_p;
 
@@ -83,42 +84,57 @@ fn main() {
     status.state.message = Some("Open Mondays from 20:00".into());
 
     // Redis connection info
-    let redis_host: String = env::var("REDIS_HOST")
-        .unwrap_or("127.0.0.1".to_string());
+    let redis_host: String = env::var("REDIS_HOST").unwrap_or("127.0.0.1".to_string());
     let redis_port: u16 = env::var("REDIS_PORT")
-        .unwrap_or("6379".to_string()).parse().unwrap_or(6379);
+        .unwrap_or("6379".to_string())
+        .parse()
+        .unwrap_or(6379);
     let redis_db: i64 = env::var("REDIS_DB")
-        .unwrap_or("0".to_string()).parse().unwrap_or(0);
+        .unwrap_or("0".to_string())
+        .parse()
+        .unwrap_or(0);
     let redis_url = format!("redis://{}:{}/{}", redis_host, redis_port, redis_db);
 
     // Create server
     let server = SpaceapiServerBuilder::new(status)
         .redis_connection_info(&*redis_url)
         .add_status_modifier(StateFromPeopleNowPresent)
-        .add_sensor(TemperatureSensorTemplate {
-            unit: "°C".into(),
-            location: "Hackerspace".into(),
-            name: Some("Raspberry CPU".into()),
-            description: None,
-        }, "temperature_raspi".into())
-        .add_sensor(TemperatureSensorTemplate {
-            unit: "°C".into(),
-            location: "Hackerspace".into(),
-            name: Some("Room Temperature (Entrance)".into()),
-            description: None,
-        }, "temperature_entrance".into())
-        .add_sensor(TemperatureSensorTemplate {
-            unit: "°C".into(),
-            location: "Hackerspace".into(),
-            name: Some("Room Temperature (Tables)".into()),
-            description: None,
-        }, "temperature_tables".into())
-        .add_sensor(PeopleNowPresentSensorTemplate {
-            location: Some("Hackerspace".into()),
-            name: None,
-            description: None,
-            names: None,
-        }, "people_now_present".into())
+        .add_sensor(
+            TemperatureSensorTemplate {
+                unit: "°C".into(),
+                location: "Hackerspace".into(),
+                name: Some("Raspberry CPU".into()),
+                description: None,
+            },
+            "temperature_raspi".into(),
+        )
+        .add_sensor(
+            TemperatureSensorTemplate {
+                unit: "°C".into(),
+                location: "Hackerspace".into(),
+                name: Some("Room Temperature (Entrance)".into()),
+                description: None,
+            },
+            "temperature_entrance".into(),
+        )
+        .add_sensor(
+            TemperatureSensorTemplate {
+                unit: "°C".into(),
+                location: "Hackerspace".into(),
+                name: Some("Room Temperature (Tables)".into()),
+                description: None,
+            },
+            "temperature_tables".into(),
+        )
+        .add_sensor(
+            PeopleNowPresentSensorTemplate {
+                location: Some("Hackerspace".into()),
+                name: None,
+                description: None,
+                names: None,
+            },
+            "people_now_present".into(),
+        )
         .build()
         .expect("Could not build server");
 
