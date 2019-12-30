@@ -53,8 +53,8 @@ fn main() {
             email: Some("vorstand@lists.coredump.ch".into()),
             ..Default::default()
         })
-        .add_issue_report_channel("email")
-        .add_issue_report_channel("twitter")
+        .add_issue_report_channel(api::IssueReportChannel::Email)
+        .add_issue_report_channel(api::IssueReportChannel::Twitter)
         .spacefed(api::Spacefed {
             spacenet: false,
             spacesaml: false,
