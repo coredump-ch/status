@@ -1,5 +1,5 @@
 # Build spaceapi
-FROM rust:1.34 as builder
+FROM rust:1.40 as builder
 WORKDIR /source
 COPY . /source
 RUN cargo build --release && \
