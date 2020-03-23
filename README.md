@@ -83,6 +83,7 @@ You can access the database with the `redis-cli` tool:
 We currently store data in the following redis keys:
 
 - people_now_present (integer)
+- people_in_cyberspace (integer)
 - raspi_temperature (float)
 - room_temperature (float)
 

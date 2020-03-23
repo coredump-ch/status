@@ -135,6 +135,15 @@ fn main() {
             },
             "people_now_present".into(),
         )
+        .add_sensor(
+            PeopleNowPresentSensorTemplate {
+                location: Some("Cyberspace".into()),
+                name: None,
+                description: Some("Our virtual hackerspace meeting through Jitsi (because of COVID)".into()),
+                names: None,
+            },
+            "people_in_cyberspace".into(),
+        )
         .build()
         .expect("Could not build server");
 
