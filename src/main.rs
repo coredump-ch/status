@@ -43,7 +43,7 @@ fn main() {
         .logo("https://www.coredump.ch/wp-content/uploads/2016/11/logo.png")
         .url("https://www.coredump.ch/")
         .location(api::Location {
-            address: Some("Holzwiesstrasse 50, 8645 Jona, Switzerland".into()),
+            address: Some("Neue Jonastrasse 107, 8640 Rapperswil, Switzerland".into()),
             lat: 47.235_960_7,
             lon: 8.841_005_7,
         })
