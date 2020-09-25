@@ -44,8 +44,8 @@ fn main() {
         .url("https://www.coredump.ch/")
         .location(api::Location {
             address: Some("Neue Jonastrasse 107, 8640 Rapperswil, Switzerland".into()),
-            lat: 47.235_960_7,
-            lon: 8.841_005_7,
+            lat: 47.225_1,
+            lon: 8.833_9,
         })
         .contact(api::Contact {
             irc: Some("irc://freenode.net/#coredump".into()),
