@@ -5,7 +5,6 @@
 //!     ./coredump_status [-p PORT] [-i IP]
 
 use docopt::Docopt;
-use env_logger;
 use serde_derive::Deserialize;
 use spaceapi_server::api;
 use spaceapi_server::api::sensors::{PeopleNowPresentSensorTemplate, TemperatureSensorTemplate};
