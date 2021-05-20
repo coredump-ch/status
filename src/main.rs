@@ -47,7 +47,7 @@ fn main() {
             lon: 8.833_9,
         })
         .contact(api::Contact {
-            irc: Some("irc://freenode.net/#coredump".into()),
+            irc: Some("irc://irc.libera.chat/#coredump".into()),
             twitter: Some("@coredump_ch".into()),
             email: Some("vorstand@lists.coredump.ch".into()),
             ..Default::default()
