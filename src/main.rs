@@ -38,7 +38,7 @@ fn main() {
     let port = args.flag_p;
 
     // Create new Status instance
-    let mut status = api::StatusBuilder::new("coredump")
+    let status = api::StatusBuilder::mixed("coredump")
         .logo("https://www.coredump.ch/wp-content/uploads/2016/11/logo.png")
         .url("https://www.coredump.ch/")
         .location(api::Location {
@@ -57,7 +57,7 @@ fn main() {
         .spacefed(api::Spacefed {
             spacenet: false,
             spacesaml: false,
-            spacephone: false,
+            spacephone: Some(false),
         })
         .feeds(api::Feeds {
             blog: Some(api::Feed {
@@ -76,11 +76,12 @@ fn main() {
         .add_project("https://github.com/coredump-ch/")
         .add_cam("https://webcam.coredump.ch/cams/ultimaker_0.jpg")
         .add_extension("ccc", "chaostreff")
+        .state(api::State {
+            message: Some("Open Mondays from 20:00".into()),
+            ..api::State::default()
+        })
         .build()
         .expect("Couldn't create status object");
-
-    // Set state message
-    status.state.message = Some("Open Mondays from 20:00".into());
 
     // Redis connection info
     let redis_host: String = env::var("REDIS_HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
