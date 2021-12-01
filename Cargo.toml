@@ -7,7 +7,6 @@ authors = [
     "Stefan Schindler <stefan@estada.ch>",
 ]
 repository = "https://github.com/coredump-ch/status"
-readme = "./README.rst"
 keywords = ["json", "spaceapi"]
 edition = "2018"
 
