@@ -96,7 +96,7 @@ To build the docker image based on the current codebase:
 
 If you want to test this using a redis database, first launch a redis container:
 
-    $ docker run -d --name spaceapi-redis redis:3.0
+    $ docker run -d --name spaceapi-redis redis:7.0
 
 Then launch a new container from the image:
 
