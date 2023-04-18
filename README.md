@@ -3,8 +3,8 @@
 [![Build status](https://circleci.com/gh/coredump-ch/status.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/coredump-ch/status)
 [![Docker Image](https://img.shields.io/badge/docker%20image-coredump%2Fstatus-yellow.svg)](https://hub.docker.com/r/coredump/status)
 
-This is our implementation of the [Space API](https://spaceapi.io/) v0.13 in
-Rust. We're using the [spaceapi](https://crates.io/crates/spaceapi) and
+This is our implementation of the [Space API](https://spaceapi.io/) v0.13 and
+v14 in Rust. We're using the [spaceapi](https://crates.io/crates/spaceapi) and
 [spaceapi-server](https://crates.io/crates/spaceapi-server) crates to simplify
 the implementation.
 
@@ -96,7 +96,7 @@ To build the docker image based on the current codebase:
 
 If you want to test this using a redis database, first launch a redis container:
 
-    $ docker run -d --name spaceapi-redis redis:3.0
+    $ docker run -d --name spaceapi-redis redis:7.0
 
 Then launch a new container from the image:
 
