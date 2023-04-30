@@ -7,7 +7,9 @@
 use docopt::Docopt;
 use serde_derive::Deserialize;
 use spaceapi_server::api;
-use spaceapi_server::api::sensors::{PeopleNowPresentSensorTemplate, TemperatureSensorTemplate};
+use spaceapi_server::api::sensors::{
+    PeopleNowPresentSensorTemplate, SensorMetadata, SensorMetadataWithLocation, TemperatureSensorTemplate,
+};
 use spaceapi_server::modifiers::StateFromPeopleNowPresent;
 use spaceapi_server::SpaceapiServerBuilder;
 use std::env;
@@ -45,6 +47,7 @@ fn main() {
             address: Some("Neue Jonastrasse 107, 8640 Rapperswil, Switzerland".into()),
             lat: 47.225_1,
             lon: 8.833_9,
+            timezone: None,
         })
         .contact(api::Contact {
             irc: Some("irc://irc.libera.chat/#coredump".into()),
@@ -102,36 +105,43 @@ fn main() {
         .add_sensor(
             TemperatureSensorTemplate {
                 unit: "°C".into(),
-                location: "Hackerspace".into(),
-                name: Some("Raspberry CPU".into()),
-                description: None,
+                metadata: SensorMetadataWithLocation {
+                    location: "Hackerspace".into(),
+                    name: Some("Raspberry CPU".into()),
+                    description: None,
+                },
             },
             "temperature_raspi".into(),
         )
         .add_sensor(
             TemperatureSensorTemplate {
                 unit: "°C".into(),
-                location: "Hackerspace".into(),
-                name: Some("Room Temperature (Sensor 1, Entrance)".into()),
-                description: None,
+                metadata: SensorMetadataWithLocation {
+                    location: "Hackerspace".into(),
+                    name: Some("Room Temperature (Sensor 1, Entrance)".into()),
+                    description: None,
+                },
             },
             "temperature_entrance".into(),
         )
         .add_sensor(
             TemperatureSensorTemplate {
                 unit: "°C".into(),
-                location: "Hackerspace".into(),
-                name: Some("Room Temperature (Sensor 2, Windows)".into()),
-                description: None,
+                metadata: SensorMetadataWithLocation {
+                    location: "Hackerspace".into(),
+                    name: Some("Room Temperature (Sensor 2, Windows)".into()),
+                    description: None,
+                },
             },
             "temperature_windows".into(),
         )
         .add_sensor(
             PeopleNowPresentSensorTemplate {
-                location: Some("Hackerspace".into()),
-                name: None,
-                description: None,
-                names: None,
+                metadata: SensorMetadata {
+                    location: Some("Hackerspace".into()),
+                    name: None,
+                    description: None,
+                },
             },
             "people_now_present".into(),
         )
