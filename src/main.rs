@@ -44,7 +44,7 @@ fn main() {
         .logo("https://www.coredump.ch/wp-content/uploads/2016/11/logo.png")
         .url("https://www.coredump.ch/")
         .location(api::Location {
-            address: Some("Neue Jonastrasse 107, 8640 Rapperswil, Switzerland".into()),
+            address: Some("Lenzikon 32B, 8732 Neuhaus, Switzerland".into()),
             lat: 47.225_1,
             lon: 8.833_9,
             timezone: None,
