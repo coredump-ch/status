@@ -720,20 +720,21 @@ checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
 
 [[package]]
 name = "spaceapi"
-version = "0.8.1"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfb00159c3cb731b45bba7ea1323b2eed08d77b851f50a8d79c6fe66bb09bce8"
+checksum = "c17c4add299cf8d62c8bc2c959b32e5447661676400f6784b8e7649d98909381"
 dependencies = [
  "log 0.4.17",
  "serde",
  "serde_json",
+ "thiserror",
 ]
 
 [[package]]
 name = "spaceapi-server"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7bcae1d546431ef0cc4bcb1c9f650f49efa5e9d71c658df28f566842d4d887d5"
+checksum = "3641f396cb774779418e1da3b53301b0bda5412c69997518214980f9d7eb288b"
 dependencies = [
  "iron",
  "log 0.4.17",
@@ -771,6 +772,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be55cf8942feac5c765c2c993422806843c9a9a45d4d5c407ad6dd2ea95eb9b6"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "thiserror"
+version = "1.0.40"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "978c9a314bd8dc99be594bc3c175faaa9794be04a5a5e153caba6915336cebac"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.40"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9456a42c5b0d803c8cd86e73dd7cc9edd429499f37a3550d286d5e86720569f"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
