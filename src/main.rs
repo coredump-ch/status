@@ -50,13 +50,12 @@ fn main() {
             timezone: None,
         })
         .contact(api::Contact {
-            irc: Some("irc://irc.libera.chat/#coredump".into()),
-            twitter: Some("@coredump_ch".into()),
-            email: Some("vorstand@lists.coredump.ch".into()),
+            mastodon: Some("@coredump@chaos.social".into()),
+            email: Some("vorstand@coredump.ch".into()),
+            phone: Some("+41 55 508 14 13".into()),
             ..Default::default()
         })
         .add_issue_report_channel(api::IssueReportChannel::Email)
-        .add_issue_report_channel(api::IssueReportChannel::Twitter)
         .spacefed(api::Spacefed {
             spacenet: false,
             spacesaml: false,
